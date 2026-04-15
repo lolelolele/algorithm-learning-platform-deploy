@@ -69,7 +69,7 @@ export default function BFS() {
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
 
-                    {/*dijkstra description*/}
+                    {/*bfs description*/}
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
@@ -79,7 +79,7 @@ export default function BFS() {
                             </p>
                     </div>
 
-                    {/* steps on how dijkstra works */}
+                    {/* steps on how bfs works */}
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
