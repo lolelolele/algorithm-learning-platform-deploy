@@ -1,10 +1,17 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
+
 import Dijkstra from "./pages/Dijkstra";
 import AStar from "./pages/AStar";
 import BFS from "./pages/BFS";
 import DFS from "./pages/DFS";
+
+import BSTSearch from "./pages/BSTSearch";
+import BSTInsert from "./pages/BSTInsert";
+import BSTDelete from "./pages/BSTDelete";
+
 import Placeholder from "./pages/Placeholder";
 
 export default function App() {
@@ -32,9 +39,9 @@ export default function App() {
         <Route path="/sorting/heap" element={<Placeholder />} />
 
         {/* BST pages */}
-        <Route path="/bst/search" element={<Placeholder />} />
-        <Route path="/bst/insert" element={<Placeholder />} />
-        <Route path="/bst/delete" element={<Placeholder />} />
+        <Route path="/bst/search" element={<BSTSearch />} />
+        <Route path="/bst/insert" element={<BSTInsert />} />
+        <Route path="/bst/delete" element={<BSTDelete />} />
       
       </Routes>
     </BrowserRouter>
