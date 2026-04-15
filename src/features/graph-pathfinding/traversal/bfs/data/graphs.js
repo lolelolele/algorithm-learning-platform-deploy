@@ -120,56 +120,131 @@ export const templates = [
         ],
         startId: "A",
     },
-    //Disconnected graphs
+    //Grid graphs
     {
-        id: "disconnected-1",
-        category: "Disconnected",
-        name: "Two Components",
+        id: "grid-1",
+        category: "Grid",
+        name: "3x3 Grid",
         nodes: [
-            //component 1
             { id: "A", x: 180, y: 60  },
-            { id: "B", x: 80,  y: 180 },
-            { id: "C", x: 280, y: 180 },
-            { id: "D", x: 80,  y: 300 },
-            //component 2
-            { id: "E", x: 580, y: 60  },
-            { id: "F", x: 480, y: 180 },
-            { id: "G", x: 680, y: 180 },
+            { id: "B", x: 400, y: 60  },
+            { id: "C", x: 620, y: 60  },
+            { id: "D", x: 180, y: 190 },
+            { id: "E", x: 400, y: 190 },
+            { id: "F", x: 620, y: 190 },
+            { id: "G", x: 180, y: 320 },
+            { id: "H", x: 400, y: 320 },
+            { id: "I", x: 620, y: 320 },
         ],
         edges: [
+            //top row
             { id: "A-B", from: "A", to: "B" },
-            { id: "A-C", from: "A", to: "C" },
-            { id: "B-D", from: "B", to: "D" },
+            { id: "B-C", from: "B", to: "C" },
+            //middle row
+            { id: "D-E", from: "D", to: "E" },
             { id: "E-F", from: "E", to: "F" },
-            { id: "E-G", from: "E", to: "G" },
+            //bottom row
+            { id: "G-H", from: "G", to: "H" },
+            { id: "H-I", from: "H", to: "I" },
+            //left column
+            { id: "A-D", from: "A", to: "D" },
+            { id: "D-G", from: "D", to: "G" },
+            //middle column
+            { id: "B-E", from: "B", to: "E" },
+            { id: "E-H", from: "E", to: "H" },
+            //right column
+            { id: "C-F", from: "C", to: "F" },
+            { id: "F-I", from: "F", to: "I" },
         ],
         startId: "A",
     },
     {
-        id: "disconnected-2",
-        category: "Disconnected",
-        name: "Three Components",
+        id: "grid-2",
+        category: "Grid",
+        name: "3x4 Grid",
         nodes: [
-            //component 1
-            { id: "A", x: 120, y: 80  },
-            { id: "B", x: 80,  y: 200 },
-            { id: "C", x: 200, y: 200 },
-            //component 2
-            { id: "D", x: 420, y: 80  },
-            { id: "E", x: 340, y: 200 },
-            { id: "F", x: 500, y: 200 },
-            //component 3
-            { id: "G", x: 700, y: 140 },
-            { id: "H", x: 650, y: 260 },
-            { id: "I", x: 760, y: 260 },
+            { id: "A", x: 120, y: 60  },
+            { id: "B", x: 320, y: 60  },
+            { id: "C", x: 520, y: 60  },
+            { id: "D", x: 720, y: 60  },
+            { id: "E", x: 120, y: 200 },
+            { id: "F", x: 320, y: 200 },
+            { id: "G", x: 520, y: 200 },
+            { id: "H", x: 720, y: 200 },
+            { id: "I", x: 120, y: 340 },
+            { id: "J", x: 320, y: 340 },
+            { id: "K", x: 520, y: 340 },
+            { id: "L", x: 720, y: 340 },
+        ],
+        edges: [
+            //top row
+            { id: "A-B", from: "A", to: "B" },
+            { id: "B-C", from: "B", to: "C" },
+            { id: "C-D", from: "C", to: "D" },
+            //middle row
+            { id: "E-F", from: "E", to: "F" },
+            { id: "F-G", from: "F", to: "G" },
+            { id: "G-H", from: "G", to: "H" },
+            //bottom row
+            { id: "I-J", from: "I", to: "J" },
+            { id: "J-K", from: "J", to: "K" },
+            { id: "K-L", from: "K", to: "L" },
+            //left column
+            { id: "A-E", from: "A", to: "E" },
+            { id: "E-I", from: "E", to: "I" },
+            //second column
+            { id: "B-F", from: "B", to: "F" },
+            { id: "F-J", from: "F", to: "J" },
+            //third column
+            { id: "C-G", from: "C", to: "G" },
+            { id: "G-K", from: "G", to: "K" },
+            //right column 
+            { id: "D-H", from: "D", to: "H" },
+            { id: "H-L", from: "H", to: "L" },
+        ],
+        startId: "A",
+    },
+    //Linear/Path graphs
+    {
+        id: "linear-1",
+        category: "Linear",
+        name: "Simple Path",
+        nodes: [
+            { id: "A", x: 80,  y: 190 },
+            { id: "B", x: 230, y: 190 },
+            { id: "C", x: 380, y: 190 },
+            { id: "D", x: 530, y: 190 },
+            { id: "E", x: 680, y: 190 },
         ],
         edges: [
             { id: "A-B", from: "A", to: "B" },
-            { id: "A-C", from: "A", to: "C" },
+            { id: "B-C", from: "B", to: "C" },
+            { id: "C-D", from: "C", to: "D" },
             { id: "D-E", from: "D", to: "E" },
-            { id: "D-F", from: "D", to: "F" },
-            { id: "G-H", from: "G", to: "H" },
-            { id: "G-I", from: "G", to: "I" },
+        ],
+        startId: "A",
+    },
+    {
+        id: "linear-2",
+        category: "Linear",
+        name: "Path with Branches",
+        nodes: [
+            { id: "A", x: 80,  y: 190 },
+            { id: "B", x: 230, y: 190 },
+            { id: "C", x: 380, y: 190 },
+            { id: "D", x: 530, y: 190 },
+            { id: "E", x: 680, y: 190 },
+            { id: "F", x: 380, y: 60  },
+            { id: "G", x: 380, y: 320 },
+        ],
+        edges: [
+            { id: "A-B", from: "A", to: "B" },
+            { id: "B-C", from: "B", to: "C" },
+            { id: "C-D", from: "C", to: "D" },
+            { id: "D-E", from: "D", to: "E" },
+            //branches off the middle node
+            { id: "C-F", from: "C", to: "F" },
+            { id: "C-G", from: "C", to: "G" },
         ],
         startId: "A",
     },
