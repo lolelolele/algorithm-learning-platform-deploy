@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import BSTRenderer from "../features/bst/BSTRenderer";
 import { buildBST, buildBSTFromString, presetTrees, defaultValues } from "../features/bst/data/trees";
-import { generateBSTDeleteSteps } from "../../features/bst/delete/logic/bstDeleteSteps";
+import { generateBSTDeleteSteps } from "../features/bst/delete/logic/bstDeleteSteps";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
