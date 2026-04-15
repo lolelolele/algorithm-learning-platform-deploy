@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
-import GraphRenderer from "../features/dijkstra/GraphRenderer";
-import { defaultGraph, templates } from "../features/bfs/data/graphs";
-import { generateBFSSteps } from "../features/bfs/logic/bfsSteps";
+import TraversalRenderer from "../features/graph-pathfinding/traversal/TraversalRenderer";
+import { defaultGraph, templates } from "../features/graph-pathfinding/traversal/bfs/data/graphs";
+import { generateBFSSteps } from "../features/graph-pathfinding/traversal/bfs/logic/bfsSteps";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -192,7 +192,7 @@ export default function Dijkstra() {
 
             /* GraphRender draws the graph and highlights algorithm state for the current step */
             visualisation={
-                <GraphRenderer
+                <TraversalRenderer
                     graph={graph}
                     startId={startId}
                     endId={null}
