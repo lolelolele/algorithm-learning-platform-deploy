@@ -139,7 +139,7 @@ export const templates = [
     //Comparison layouts: shows difference between A* and Dijkstra
     {
         id: "compare-1",
-        category: "A* vs Dijkstra",
+        category: "Uniform Weightsa",
         name: "Heuristic Saves Steps",
         nodes: [
             { id: "A", x: 80,  y: 190 },
@@ -173,7 +173,7 @@ export const templates = [
     },
     {
         id: "compare-2",
-        category: "A* vs Dijkstra",
+        category: "Uniform Weights",
         name: "Multiple Equal Paths",
         nodes: [
             { id: "A", x: 80,  y: 190 },

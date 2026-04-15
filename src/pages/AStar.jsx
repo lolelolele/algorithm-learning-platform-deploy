@@ -167,7 +167,7 @@ export default function AStar() {
                                     ))}
                             </optgroup>
 
-                            <optgroup label="A* vs Dijkstra">
+                            <optgroup label="Uniform Weights">
                                 {templates
                                     .filter(t => t.category === "A* vs Dijkstra")
                                     .map(t => (
