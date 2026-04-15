@@ -15,19 +15,20 @@ export function generateBFSSteps(graph, startId) {
     /* Set up BFS structures:
         - visited nodes
         - queue (FIFO)
-        -visit order
+        - visit order
     */
+    const enqueued = new Set();
     const visited = new Set();
     const queue = [startId];
     const visitedOrder = [];
-    visited.add(startId);
+    enqueued.add(startId);
 
     //initial state before traversal begins
     steps.push({
-        visitedNodes: new Set([startId]),
-        currentNode: startId,
+        visitedNodes: new Set(),
+        currentNode: null,
         queue: [startId],
-        visitedOrder: [startId],
+        visitedOrder: [],
         highlightEdges: new Set(),
         explanation: `Starting BFS from node ${startId}. Initialising queue with the start node.`,
         whyThisStep: `BFS always begins by placing the start node in the queue and marking it as visited so we don't revisit it.`,
@@ -41,6 +42,9 @@ export function generateBFSSteps(graph, startId) {
 
         //remove the first node from the queue
         const current = queue.shift();
+
+        visited.add(current);
+        visitedOrder.push(current);
         operationCount++;
 
         //get neighbours of the current node
@@ -56,11 +60,10 @@ export function generateBFSSteps(graph, startId) {
             );
             if (edge) newHighlightEdges.add(edge.id);
 
-            //if neighbour not visited, mark and add to queue
-            if (!visited.has(neighbour)) {
-                visited.add(neighbour);
+            //if neighbour not enqueued, mark and add to queue
+            if (!enqueued.has(neighbour)) {
+                enqueued.add(neighbour);
                 queue.push(neighbour);
-                visitedOrder.push(neighbour);
             }
         });
         
