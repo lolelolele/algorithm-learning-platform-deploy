@@ -45,7 +45,7 @@ export default function GraphRenderer({ graph, step }) {
                         <div className="flex items-center gap-2">
                             <span className="inline-block h-3 w-3 rounded-full border"
                                 style={{ background: "#dbeafe", borderColor: "#374151" }} />
-                            <span>In Queue</span>
+                            <span>In Queue / Stack</span>
                         </div>
                         <div className="flex items-center gap-2">
                             <span className="inline-block h-3 w-3 rounded-full border"
