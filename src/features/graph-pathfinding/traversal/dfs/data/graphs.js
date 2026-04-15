@@ -1,0 +1,251 @@
+export const defaultGraph = {
+    nodes: [
+        { id: "A", x: 400, y: 40  },
+        { id: "B", x: 220, y: 140 },
+        { id: "C", x: 580, y: 140 },
+        { id: "D", x: 120, y: 260 },
+        { id: "E", x: 320, y: 260 },
+        { id: "F", x: 480, y: 260 },
+        { id: "G", x: 680, y: 260 },
+    ],
+    edges: [
+        { id: "A-B", from: "A", to: "B" },
+        { id: "A-C", from: "A", to: "C" },
+        { id: "B-D", from: "B", to: "D" },
+        { id: "B-E", from: "B", to: "E" },
+        { id: "C-F", from: "C", to: "F" },
+        { id: "C-G", from: "C", to: "G" },
+    ],
+    startId: "A",
+};
+
+export const templates = [
+    //Tree layouts
+    {
+        id: "tree-small",
+        category: "Tree",
+        name: "Small Tree",
+        nodes: [
+            { id: "A", x: 400, y: 40  },
+            { id: "B", x: 240, y: 150 },
+            { id: "C", x: 560, y: 150 },
+            { id: "D", x: 160, y: 280 },
+            { id: "E", x: 320, y: 280 },
+        ],
+        edges: [
+            { id: "A-B", from: "A", to: "B" },
+            { id: "A-C", from: "A", to: "C" },
+            { id: "B-D", from: "B", to: "D" },
+            { id: "B-E", from: "B", to: "E" },
+        ],
+        startId: "A",
+    },
+    {
+        id: "tree-large",
+        category: "Tree",
+        name: "Large Tree",
+        nodes: [
+            { id: "A", x: 400, y: 30  },
+            { id: "B", x: 200, y: 120 },
+            { id: "C", x: 600, y: 120 },
+            { id: "D", x: 100, y: 230 },
+            { id: "E", x: 300, y: 230 },
+            { id: "F", x: 500, y: 230 },
+            { id: "G", x: 700, y: 230 },
+            { id: "H", x: 50,  y: 330 },
+            { id: "I", x: 150, y: 330 },
+        ],
+        edges: [
+            { id: "A-B", from: "A", to: "B" },
+            { id: "A-C", from: "A", to: "C" },
+            { id: "B-D", from: "B", to: "D" },
+            { id: "B-E", from: "B", to: "E" },
+            { id: "C-F", from: "C", to: "F" },
+            { id: "C-G", from: "C", to: "G" },
+            { id: "D-H", from: "D", to: "H" },
+            { id: "D-I", from: "D", to: "I" },
+        ],
+        startId: "A",
+    },
+    //Cyclic graphs
+    {
+        id: "cyclic-1",
+        category: "Cyclic",
+        name: "Cyclic Graph",
+        nodes: [
+            { id: "A", x: 400, y: 40  },
+            { id: "B", x: 200, y: 150 },
+            { id: "C", x: 600, y: 150 },
+            { id: "D", x: 120, y: 280 },
+            { id: "E", x: 320, y: 280 },
+            { id: "F", x: 480, y: 280 },
+            { id: "G", x: 680, y: 280 },
+        ],
+        edges: [
+            { id: "A-B", from: "A", to: "B" },
+            { id: "A-C", from: "A", to: "C" },
+            { id: "B-D", from: "B", to: "D" },
+            { id: "B-E", from: "B", to: "E" },
+            { id: "C-F", from: "C", to: "F" },
+            { id: "C-G", from: "C", to: "G" },
+            { id: "E-F", from: "E", to: "F" },
+            { id: "D-E", from: "D", to: "E" },
+        ],
+        startId: "A",
+    },
+    {
+        id: "cyclic-2",
+        category: "Cyclic",
+        name: "Dense Cyclic",
+        nodes: [
+            { id: "A", x: 400, y: 40  },
+            { id: "B", x: 180, y: 160 },
+            { id: "C", x: 620, y: 160 },
+            { id: "D", x: 100, y: 300 },
+            { id: "E", x: 300, y: 300 },
+            { id: "F", x: 500, y: 300 },
+            { id: "G", x: 700, y: 300 },
+        ],
+        edges: [
+            { id: "A-B", from: "A", to: "B" },
+            { id: "A-C", from: "A", to: "C" },
+            { id: "B-D", from: "B", to: "D" },
+            { id: "B-E", from: "B", to: "E" },
+            { id: "C-F", from: "C", to: "F" },
+            { id: "C-G", from: "C", to: "G" },
+            { id: "B-C", from: "B", to: "C" },
+            { id: "E-F", from: "E", to: "F" },
+            { id: "D-E", from: "D", to: "E" },
+            { id: "F-G", from: "F", to: "G" },
+        ],
+        startId: "A",
+    },
+    //Grid graphs
+    {
+        id: "grid-1",
+        category: "Grid",
+        name: "3x3 Grid",
+        nodes: [
+            { id: "A", x: 180, y: 60  },
+            { id: "B", x: 400, y: 60  },
+            { id: "C", x: 620, y: 60  },
+            { id: "D", x: 180, y: 190 },
+            { id: "E", x: 400, y: 190 },
+            { id: "F", x: 620, y: 190 },
+            { id: "G", x: 180, y: 320 },
+            { id: "H", x: 400, y: 320 },
+            { id: "I", x: 620, y: 320 },
+        ],
+        edges: [
+            //top row
+            { id: "A-B", from: "A", to: "B" },
+            { id: "B-C", from: "B", to: "C" },
+            //middle row
+            { id: "D-E", from: "D", to: "E" },
+            { id: "E-F", from: "E", to: "F" },
+            //bottom row
+            { id: "G-H", from: "G", to: "H" },
+            { id: "H-I", from: "H", to: "I" },
+            //left column
+            { id: "A-D", from: "A", to: "D" },
+            { id: "D-G", from: "D", to: "G" },
+            //middle column
+            { id: "B-E", from: "B", to: "E" },
+            { id: "E-H", from: "E", to: "H" },
+            //right column
+            { id: "C-F", from: "C", to: "F" },
+            { id: "F-I", from: "F", to: "I" },
+        ],
+        startId: "A",
+    },
+    {
+        id: "grid-2",
+        category: "Grid",
+        name: "3x4 Grid",
+        nodes: [
+            { id: "A", x: 120, y: 60  },
+            { id: "B", x: 320, y: 60  },
+            { id: "C", x: 520, y: 60  },
+            { id: "D", x: 720, y: 60  },
+            { id: "E", x: 120, y: 200 },
+            { id: "F", x: 320, y: 200 },
+            { id: "G", x: 520, y: 200 },
+            { id: "H", x: 720, y: 200 },
+            { id: "I", x: 120, y: 340 },
+            { id: "J", x: 320, y: 340 },
+            { id: "K", x: 520, y: 340 },
+            { id: "L", x: 720, y: 340 },
+        ],
+        edges: [
+            //top row
+            { id: "A-B", from: "A", to: "B" },
+            { id: "B-C", from: "B", to: "C" },
+            { id: "C-D", from: "C", to: "D" },
+            //middle row
+            { id: "E-F", from: "E", to: "F" },
+            { id: "F-G", from: "F", to: "G" },
+            { id: "G-H", from: "G", to: "H" },
+            //bottom row
+            { id: "I-J", from: "I", to: "J" },
+            { id: "J-K", from: "J", to: "K" },
+            { id: "K-L", from: "K", to: "L" },
+            //left column
+            { id: "A-E", from: "A", to: "E" },
+            { id: "E-I", from: "E", to: "I" },
+            //second column
+            { id: "B-F", from: "B", to: "F" },
+            { id: "F-J", from: "F", to: "J" },
+            //third column
+            { id: "C-G", from: "C", to: "G" },
+            { id: "G-K", from: "G", to: "K" },
+            //right column 
+            { id: "D-H", from: "D", to: "H" },
+            { id: "H-L", from: "H", to: "L" },
+        ],
+        startId: "A",
+    },
+    //Linear/Path graphs
+    {
+        id: "linear-1",
+        category: "Linear",
+        name: "Simple Path",
+        nodes: [
+            { id: "A", x: 80,  y: 190 },
+            { id: "B", x: 230, y: 190 },
+            { id: "C", x: 380, y: 190 },
+            { id: "D", x: 530, y: 190 },
+            { id: "E", x: 680, y: 190 },
+        ],
+        edges: [
+            { id: "A-B", from: "A", to: "B" },
+            { id: "B-C", from: "B", to: "C" },
+            { id: "C-D", from: "C", to: "D" },
+            { id: "D-E", from: "D", to: "E" },
+        ],
+        startId: "A",
+    },
+    {
+        id: "linear-2",
+        category: "Linear",
+        name: "Path with Branches",
+        nodes: [
+            { id: "A", x: 80,  y: 190 },
+            { id: "B", x: 230, y: 190 },
+            { id: "C", x: 380, y: 190 },
+            { id: "D", x: 530, y: 190 },
+            { id: "E", x: 680, y: 190 },
+            { id: "F", x: 380, y: 60  },
+            { id: "G", x: 380, y: 320 },
+        ],
+        edges: [
+            { id: "A-B", from: "A", to: "B" },
+            { id: "B-C", from: "B", to: "C" },
+            { id: "C-D", from: "C", to: "D" },
+            { id: "D-E", from: "D", to: "E" },
+            //branches off the middle node
+            { id: "C-F", from: "C", to: "F" },
+            { id: "C-G", from: "C", to: "G" },
+        ],
+        startId: "A",
+    },
+];
