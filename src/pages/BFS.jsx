@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import GraphRenderer from "../features/dijkstra/GraphRenderer";
 import { defaultGraph, templates } from "../features/bfs/data/graphs";
-import { generateBFSSteps } from "../features/dijkstra/logic/bfsSteps";
+import { generateBFSSteps } from "../features/bfs/logic/bfsSteps";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -192,12 +192,18 @@ export default function Dijkstra() {
 
             /* GraphRender draws the graph and highlights algorithm state for the current step */
             visualisation={
-                <GraphRenderer 
-                    graph={graph} 
-                    currentNode={currentStep.currentNode}
-                    visitedNodes={currentStep.visitedNodes}
-                    highlightEdges={currentStep.highlightEdges}
-                    finalPath={new Set()}
+                <GraphRenderer
+                    graph={graph}
+                    startId={startId}
+                    endId={null}
+                    step={{
+                        currentNode: currentStep.currentNode,
+                        visited: Array.from(currentStep.visitedNodes),
+                        frontier: currentStep.queue,
+                        activeEdge: null,
+                        shortestPathNodes: [],
+                        shortestPathEdges: [],
+                    }}
                     showWeights={false}
                 />
             }

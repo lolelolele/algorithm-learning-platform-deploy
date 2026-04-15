@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Dijkstra from "./pages/Dijkstra";
-import BFS from "./pages/BFS"
+import BFS from "./pages/BFS";
 import Placeholder from "./pages/Placeholder";
 
 export default function App() {
