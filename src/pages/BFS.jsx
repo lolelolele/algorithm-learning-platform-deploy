@@ -140,9 +140,9 @@ export default function Dijkstra() {
                             <option value="custom">Custom (Default)</option>
 
                             {/* group templates selection */}
-                            <optgroup label="Simple">
+                            <optgroup label="Tree">
                                 {templates
-                                    .filter(t => t.category === "Simple")
+                                    .filter(t => t.category === "Tree")
                                     .map(t => (
                                         <option key={t.id} value={t.id}>
                                             {t.name}
@@ -150,9 +150,9 @@ export default function Dijkstra() {
                                     ))}
                             </optgroup>
 
-                            <optgroup label="Medium">
+                            <optgroup label="Cyclic">
                                 {templates
-                                    .filter(t => t.category === "Medium")
+                                    .filter(t => t.category === "Cyclic")
                                     .map(t => (
                                         <option key={t.id} value={t.id}>
                                             {t.name}
@@ -160,9 +160,19 @@ export default function Dijkstra() {
                                     ))}
                             </optgroup>
 
-                            <optgroup label="Dense">
+                            <optgroup label="Grid">
                                 {templates
-                                    .filter(t => t.category === "Dense")
+                                    .filter(t => t.category === "Grid")
+                                    .map(t => (
+                                        <option key={t.id} value={t.id}>
+                                            {t.name}
+                                        </option>
+                                    ))}
+                            </optgroup>
+
+                            <optgroup label="Linear">
+                                {templates
+                                    .filter(t => t.category === "Linear")
                                     .map(t => (
                                         <option key={t.id} value={t.id}>
                                             {t.name}
