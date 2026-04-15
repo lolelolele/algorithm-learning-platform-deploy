@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Dijkstra from "./pages/Dijkstra";
+import BFS from "./pages/BFS"
 import Placeholder from "./pages/Placeholder";
 
 export default function App() {
@@ -19,7 +20,7 @@ export default function App() {
         {/* Graph Pathfinding pages */}
         <Route path="/dijkstra" element={<Dijkstra />} />
         <Route path="/a-star" element={<Placeholder />} />
-        <Route path="/bfs" element={<Placeholder />} />
+        <Route path="/bfs" element={<BFS />} />
         <Route path="/dfs" element={<Placeholder />} />
 
         {/* Sorting pages */}
