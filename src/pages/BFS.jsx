@@ -194,17 +194,13 @@ export default function Dijkstra() {
             visualisation={
                 <TraversalRenderer
                     graph={graph}
-                    startId={startId}
-                    endId={null}
                     step={{
+                        startId: startId,
                         currentNode: currentStep.currentNode,
                         visited: Array.from(currentStep.visitedNodes),
                         frontier: currentStep.queue,
-                        activeEdge: null,
-                        shortestPathNodes: [],
-                        shortestPathEdges: [],
+                        highlightEdges: Array.from(currentStep.highlightEdges),
                     }}
-                    showWeights={false}
                 />
             }
 
