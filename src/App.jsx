@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Dijkstra from "./pages/Dijkstra";
 import BFS from "./pages/BFS";
+import DFS from "./pages/DFS";
 import Placeholder from "./pages/Placeholder";
 
 export default function App() {
@@ -21,7 +22,7 @@ export default function App() {
         <Route path="/dijkstra" element={<Dijkstra />} />
         <Route path="/a-star" element={<Placeholder />} />
         <Route path="/bfs" element={<BFS />} />
-        <Route path="/dfs" element={<Placeholder />} />
+        <Route path="/dfs" element={<DFS />} />
 
         {/* Sorting pages */}
         <Route path="/sorting/bubble" element={<Placeholder />} />
