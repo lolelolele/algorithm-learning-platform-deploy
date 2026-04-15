@@ -31,6 +31,39 @@ export function buildBSTFromString(input) {
     return buildBST(values);
 }
 
+export function flattenTree(root) {
+    if (!root) return [];
+
+    const nodes = [];
+    let counter = 0;
+
+    /* first pass: assign in-order index to each node for x positioning */
+    function assignIndex(node) {
+        if (!node) return;
+        assignIndex(node.left);
+        node._index = counter++;
+        assignIndex(node.right);
+    }
+
+    /* second pass: build flat array with positions */
+    function buildFlat(node, depth, parentId) {
+        if (!node) return;
+
+        const id = `${node.value}-${depth}-${node._index}`;
+        const x = 60 + node._index * 70;
+        const y = 50 + depth * 80;
+
+        nodes.push({ id, value: node.value, x, y, parentId, depth });
+
+        buildFlat(node.left, depth + 1, id);
+        buildFlat(node.right, depth + 1, id);
+    }
+    
+    assignIndex(root);
+    buildFlat(root, 0, null);
+    return nodes;
+}
+
 /* preset trees */
 export const presetTrees = [
     {
