@@ -11,7 +11,7 @@ import stepForwardIcon from "../assets/icons/step_forward.png";
 import stepBackwardIcon from "../assets/icons/step_backward.png";
 import resetIcon from "../assets/icons/reset.png";
 
-export default function Dijkstra() {
+export default function BFS() {
 
     /* Graph configuration:
         - graph: current graph data
