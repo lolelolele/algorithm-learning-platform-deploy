@@ -15,7 +15,7 @@ export default function GraphRenderer({ graph, startId, endId, step }) {
     const shortestPathNodeSet = new Set(step?.shortestPathNodes ?? []);
 
     return (
-        /* SVG used for predictable and resolution-independent rendering */
+        /* SVG used for scalable and consistent rendering */
         <svg
             width="100%"
             height="100%"
