@@ -21,7 +21,7 @@ export default function GraphRenderer({ graph, step }) {
             className="bg-white"
         >
             {/* legend inside SVG using foreignObject*/}
-            <foreignObject x="-45" y="10" width="140" height="170">
+            <foreignObject x="-50" y="-160" width="150" height="170">
                 <div className="rounded-md border bg-white/90 p-2 text-xs text-gray-700">
                     <div className="font-semibold mb-2">Legend:</div>
                     
