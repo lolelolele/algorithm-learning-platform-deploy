@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
-import GraphRenderer from "../features/dijkstra/GraphRenderer";
-import { defaultGraph, templates } from "../features/dijkstra/data/graphs";
-import { generateDijkstraSteps } from "../features/dijkstra/logic/dijkstraSteps";
+import WeightedGraphRenderer from "../features/graph-pathfinding/weighted/WeightedGraphRenderer";
+import { defaultGraph, templates } from "../features/graph-pathfinding/weighted/dijkstra/data/graphs";
+import { generateDijkstraSteps } from "../features/graph-pathfinding/weighted/dijkstra/logic/dijkstraSteps";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -214,7 +214,7 @@ export default function Dijkstra() {
 
             /* GraphRender draws the graph and highlights algorithm state for the current step */
             visualisation={
-                <GraphRenderer 
+                <WeightedGraphRenderer
                     graph={graph} 
                     startId={startId}
                     endId={endId}
