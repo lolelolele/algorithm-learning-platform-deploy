@@ -64,7 +64,7 @@ export default function DFS() {
 
     return (
         <AlgorithmLayout
-            title="Depth-First Search (BFS)"
+            title="Depth-First Search (DFS)"
 
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
@@ -228,7 +228,7 @@ export default function DFS() {
                     <div>
                         <span className="font-medium">Stack: </span>
                         <span className="font-mono">
-                            [{currentStep.queue.join(", ")}]
+                            [{currentStep.stack.join(", ")}]
                         </span>
                     </div>
 
