@@ -110,7 +110,7 @@ export default function AStar() {
             }
 
             /* supports template switching and selcting start/end nodes */
-            graphEditor={
+            editorPanel={
                 <div className="space-y-4 text-sm">
 
                     <div>
