@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
-import BSTRenderer from "../../features/bst/BSTRenderer";
+import BSTRenderer from "../features/bst/BSTRenderer";
 import { buildBST, buildBSTFromString, presetTrees, defaultValues } from "../features/bst/data/trees";
 import { generateBSTSearchSteps } from "../../features/bst/search/logic/bstSearchSteps";
 
