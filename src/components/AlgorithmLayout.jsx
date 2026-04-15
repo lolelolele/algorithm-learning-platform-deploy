@@ -8,6 +8,7 @@ export default function AlgorithmLayout({
     controls,
     graphEditor,
     whyThisStep,
+    editorLabel = "Graph Editor",
 }) {
     return (
         /* full height layout minus navbar height (80px) */
@@ -33,7 +34,7 @@ export default function AlgorithmLayout({
 
                         {/*Graph Editor panel*/}
                         <aside className="flex-1 rounded-md border bg-white p-4 overflow-auto">
-                            <h2 className="mb-2 font-semibold">Graph Editor</h2>
+                            <h2 className="mb-2 font-semibold">{editorLabel}</h2>
                             {graphEditor}
                         </aside>
                     </div>
