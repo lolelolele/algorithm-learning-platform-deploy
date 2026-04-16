@@ -76,6 +76,30 @@ export default function AStar() {
         return () => clearTimeout(timer);
     }, [isPlaying, speed, safeStepIndex, steps.length]);
 
+    // when template changes it loads a new graph and resets weight edit
+    function handleTemplateChange(value) {
+        setSelectedTemplateId(value);
+        setIsPlaying(false);
+        setStepIndex(0);
+        setWeightEdits({});
+        setWeightError("");
+    
+        if (value === "custom") {
+            const g = cloneGraph(defaultGraph);
+            setGraph(g);
+            setStartId(g.startId);
+            setEndId(g.endId);
+        } else {
+            const selected = templates.find(t => t.id === value);
+            if (selected) {
+                const g = cloneGraph(selected);
+                setGraph(g);
+                setStartId(g.startId);
+                setEndId(g.endId);
+            }
+        }
+    }
+
     return (
         <AlgorithmLayout
             title="A* Search Algorithm"
@@ -131,29 +155,8 @@ export default function AStar() {
                         <select 
                             className="w-full rounded-md border p-2" 
                             value={selectedTemplateId}
-                            onChange={(e) => {
-                                const value = e.target.value;
-                                setSelectedTemplateId(value);
-
-                                //stop autoplay and reset to keep state consistent after data changes
-                                setIsPlaying(false);
-                                setStepIndex(0);
-
-                                //resets to default graph configuration
-                                if (value === "custom") {
-                                    setGraph(defaultGraph);
-                                    setStartId(defaultGraph.startId);
-                                    setEndId(defaultGraph.endId);
-                                } else {
-                                    //load a template by id
-                                    const selected = templates.find(t => t.id ===value);
-                                    if (selected) {
-                                        setGraph(selected);
-                                        setStartId(selected.startId);
-                                        setEndId(selected.endId);
-                                    }
-                                }
-                            }}
+                            
+                            onChange={e => handleTemplateChange(e.target.value)}
 
                         >
                             <option value="custom">Custom (Default)</option>
