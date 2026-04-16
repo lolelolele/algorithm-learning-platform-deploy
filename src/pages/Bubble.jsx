@@ -3,6 +3,8 @@ import AlgorithmLayout from "../components/AlgorithmLayout";
 import BubbleRenderer from "../features/sorting/bubble/BubbleRenderer";
 import { generateBubbleSteps } from "../features/sorting/bubble/logic/bubbleSteps";
 import { defaultArray, presets } from "../features/sorting/data/arrays";
+import ChallengeMode from "../components/ChallengeMode";
+import { generateBubbleChallengeQuestions } from "../features/sorting/bubble/logic/bubbleChallengeQuestions";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -42,6 +44,7 @@ export default function Bubble() {
     const steps = generateBubbleSteps(array);
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
+    const challengeQuestions = generateBubbleChallengeQuestions(steps);
 
     useEffect(() => {
         if (!isPlaying) return;
@@ -161,10 +164,19 @@ export default function Bubble() {
             }
 
             visualisation={
-                <BubbleRenderer
-                    array={currentStep?.array ?? array}
-                    step={currentStep}
-                />
+                <ChallengeMode
+                    steps={steps}
+                    currentStepIndex={safeStepIndex}
+                    onStepChange={setStepIndex}
+                    isPlaying={isPlaying}
+                    onPlayingChange={setIsPlaying}
+                    questions={challengeQuestions}
+                >
+                    <BubbleRenderer
+                        array={currentStep?.array ?? array}
+                        step={currentStep}
+                    />
+                </ChallengeMode>
             }
 
             metrics={
