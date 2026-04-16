@@ -45,12 +45,22 @@ export function flattenTree(root) {
         assignIndex(node.right);
     }
 
+    assignIndex(root);
+
+    const totalNodes = counter;
+    const spacingX = 70;
+    const svgWidth = 900;
+
+    const treeWidth = (totalNodes - 1) * spacingX;
+
+    const startX = (svgWidth - treeWidth) / 2
+
     /* second pass: build flat array with positions */
     function buildFlat(node, depth, parentId) {
         if (!node) return;
 
         const id = `${node.value}-${depth}-${node._index}`;
-        const x = 60 + node._index * 70;
+        const x = startX + node._index * spacingX;
         const y = 50 + depth * 80;
 
         nodes.push({ id, value: node.value, x, y, parentId, depth });
@@ -59,7 +69,6 @@ export function flattenTree(root) {
         buildFlat(node.right, depth + 1, id);
     }
     
-    assignIndex(root);
     buildFlat(root, 0, null);
     return nodes;
 }
