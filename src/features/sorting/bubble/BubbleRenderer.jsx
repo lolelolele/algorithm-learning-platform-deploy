@@ -86,7 +86,7 @@ export default function BubbleRenderer({ array, step }) {
     }
 
     return (
-        <div className="flex flex-col items-center gap-4 w-full overflow-x-auto py-2">
+        <div className="flex flex-col items-center justify-center gap-4 w-full h-full overflow-x-auto py-2">
             <svg
                 width={svgW}
                 height={svgH}
