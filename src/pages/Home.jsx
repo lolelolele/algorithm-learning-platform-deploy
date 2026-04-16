@@ -411,6 +411,46 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* how to use */}
+            <section className="max-w-5xl mx-auto px-6 py-8">
+                <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">
+                    How to Use
+                </h2>
+                <div className="grid grid-cols-3 gap-6">
+                    {howToUseSteps.map(step => (
+                        <div key={step.number} className="bg-white rounded-xl border p-6">
+                            <div className="text-2xl font-bold text-gray-200 mb-2">
+                                {step.number}
+                            </div>
+                            <h3 className="font-semibold text-gray-800 mb-1">
+                                {step.title}
+                            </h3>
+                            <p className="text-sm text-gray-500 leading-relaxed">
+                                {step.description}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </section>
+
+            {/* features */}
+            <section className="max-w-5xl mx-auto px-6 py-8 pb-16">
+                <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">
+                    Features
+                </h2>
+                <div className="grid grid-cols-4 gap-4">
+                    {features.map(f => (
+                        <div key={f.title} className="bg-white rounded-xl border p-5">
+                            <h3 className="font-semibold text-gray-800 text-sm mb-1">
+                                {f.title}
+                            </h3>
+                            <p className="text-xs text-gray-500 leading-relaxed">
+                                {f.description}
+                            </p>
+                        </div>
+                    ))}
+                </div>
+            </section>
         </div>
     );
 }
