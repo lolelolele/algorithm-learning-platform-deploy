@@ -84,6 +84,7 @@ export default function BSTDelete() {
     return (
         <AlgorithmLayout
             title="Binary Search Tree (BST) Delete"
+            editorLabel="Tree Editor"
 
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">

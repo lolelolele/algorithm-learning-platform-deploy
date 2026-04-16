@@ -78,6 +78,7 @@ export default function BSTSearch() {
     return (
         <AlgorithmLayout
             title="Binary Search Tree (BST) Search"
+            editorLabel="Tree Editor"
 
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
