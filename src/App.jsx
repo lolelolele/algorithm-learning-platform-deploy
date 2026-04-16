@@ -8,6 +8,8 @@ import AStar from "./pages/AStar";
 import BFS from "./pages/BFS";
 import DFS from "./pages/DFS";
 
+import Bubble from "./pages/Bubble";
+
 import BSTSearch from "./pages/BSTSearch";
 import BSTInsert from "./pages/BSTInsert";
 import BSTDelete from "./pages/BSTDelete";
@@ -33,7 +35,7 @@ export default function App() {
         <Route path="/dfs" element={<DFS />} />
 
         {/* Sorting pages */}
-        <Route path="/sorting/bubble" element={<Placeholder />} />
+        <Route path="/sorting/bubble" element={<Bubble />} />
         <Route path="/sorting/merge" element={<Placeholder />} />
         <Route path="/sorting/quick" element={<Placeholder />} />
         <Route path="/sorting/heap" element={<Placeholder />} />
