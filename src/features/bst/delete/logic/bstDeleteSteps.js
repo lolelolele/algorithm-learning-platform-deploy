@@ -4,7 +4,7 @@
    2. One child
    3. Two children (replace with in-order successor) */
 
-import { flattenTree } from "../../trees.js";
+   import { flattenTree } from "../../data/trees.js";
 
 /* finds the in-order successor (smallest value in right subtree) */
 function findMinNode(node) {

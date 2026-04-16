@@ -1,4 +1,4 @@
-import { flattenTree, insertNode } from "../../trees.js";
+import { flattenTree, insertNode } from "../../data/trees.js";
 
 export function generateBSTInsertSteps(root, value) {
     const steps = [];

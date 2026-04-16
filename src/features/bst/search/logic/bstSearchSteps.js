@@ -2,7 +2,7 @@
    At each step we compare the target value to the current node
    and go left or right accordingly. */
 
-import { flattenTree } from "../../trees.js";
+   import { flattenTree } from "../../data/trees.js";
 
 export function generateBSTSearchSteps(root, target) {
     const steps = [];
