@@ -11,13 +11,21 @@ import stepForwardIcon from "../assets/icons/step_forward.png";
 import stepBackwardIcon from "../assets/icons/step_backward.png";
 import resetIcon from "../assets/icons/reset.png";
 
+// deep clone a graph so we can safely mutate edge weights
+function cloneGraph(g) {
+    return {
+        ...g,
+        nodes: g.nodes.map(n => ({ ...n })),
+        edges: g.edges.map(e => ({ ...e })),
+    };
+}
 
 export default function AStar() {
 
     /* Graph configuration:
         - graph: current graph data
         - selectedTemplateId: which template is currently active */
-    const [graph, setGraph] = useState(defaultGraph);
+    const [graph, setGraph] = useState(cloneGraph(defaultGraph));
     const [selectedTemplateId, setSelectedTemplateId] = useState("custom");
 
     /* Algorithm state:
@@ -40,6 +48,10 @@ export default function AStar() {
         - speed: playback speed multipler */
     const [isPlaying, setIsPlaying] = useState(false);
     const [speed, setSpeed] = useState(1);
+
+    // local weight edits — stored as { "A-B": 7, ... }
+    const [weightEdits, setWeightEdits] = useState({});
+    const [weightError, setWeightError] = useState("");
 
     /* if the start/end changes -> reset playback */
     useEffect(() => {
