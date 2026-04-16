@@ -163,9 +163,9 @@ export default function HeapRenderer({ array, step }) {
         if (swapped) {
             const x1 = rowStartX + swapped[0] * (BOX_W + BOX_GAP) + BOX_W / 2;
             const x2 = rowStartX + swapped[1] * (BOX_W + BOX_GAP) + BOX_W / 2;
-            const y = rowY - 4;
+            const y  = rowY + BOX_H;
             const mx = (x1 + x2) / 2;
-            const cy = y + 28;
+            const cy = y + 30;
             const path = `M ${x1} ${y} Q ${mx} ${cy} ${x2} ${y}`;
 
             elements.push(
@@ -188,7 +188,7 @@ export default function HeapRenderer({ array, step }) {
                         markerEnd={`url(#${swapArrowId})`}
                     />
                     <text
-                        x={mx} y={cy - 2}
+                        x={mx} y={cy - 4}
                         textAnchor="middle"
                         fontSize="10"
                         fill="#dc2626"
