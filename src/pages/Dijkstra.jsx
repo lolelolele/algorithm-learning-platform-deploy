@@ -259,6 +259,39 @@ export default function Dijkstra() {
                             ))}
                         </select>
                     </div>
+
+                    {/* weight editor */}
+                    <div className="border-t pt-3">
+                        <label className="block font-medium mb-2">Edit Edge Weights:</label>
+                        <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                            {graph.edges.map(e => (
+                                <div key={edgeKey(e)} className="flex items-center gap-2">
+                                    <span className="text-gray-600 font-mono text-xs w-16 flex-shrink-0">
+                                        {e.from} → {e.to}
+                                    </span>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        value={displayWeight(e)}
+                                        onChange={ev => setWeightEdits(prev => ({
+                                            ...prev,
+                                            [edgeKey(e)]: ev.target.value,
+                                        }))}
+                                        className="w-full rounded-md border p-1 text-sm"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        {weightError && (
+                            <p className="text-red-500 text-xs mt-1">{weightError}</p>
+                        )}
+                        <button
+                            onClick={applyWeights}
+                            className="mt-2 w-full rounded-md border px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-medium"
+                        >
+                            Apply Weights
+                        </button>
+                    </div>
                 </div>
             }
 
