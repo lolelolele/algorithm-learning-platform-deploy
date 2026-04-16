@@ -166,7 +166,10 @@ export default function Quick() {
             }
 
             visualisation={
-                <QuickRenderer step={currentStep} />
+                <QuickRenderer
+                    array={currentStep?.array ?? array}
+                    step={currentStep}
+                />
             }
 
             metrics={

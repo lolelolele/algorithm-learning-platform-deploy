@@ -1,279 +1,145 @@
-const STATE_COLOURS = {
-    active:  { fill: "#fde68a", stroke: "#d97706" },  // amber  — being partitioned
-    pivot:   { fill: "#e9d5ff", stroke: "#7c3aed" },  // purple — pivot element
-    sorted:  { fill: "#bbf7d0", stroke: "#16a34a" },  // green  — final position
-    idle:    { fill: "#f1f5f9", stroke: "#94a3b8" },  // slate  — waiting
-};
+import { useId } from "react";
 
-const TYPE_COLOURS = {
-    pivot:   { fill: "#e9d5ff", stroke: "#7c3aed" },
-    sorted:  { fill: "#bbf7d0", stroke: "#16a34a" },
-};
+export default function QuickRenderer({ array, step }) {
+    const arrowId = useId();
 
-const LEVEL_HEIGHT = 110;
-const BOX_H        = 40;
-const CELL_W       = 32;
-const CELL_PAD     = 8;
-const SVG_WIDTH    = 800;
-const MIN_SVG_H    = 400;
-
-function nodeX(position) {
-    return 40 + position * (SVG_WIDTH - 80);
-}
-
-function nodeY(level) {
-    return level * LEVEL_HEIGHT + 20;
-}
-
-function boxWidth(array) {
-    return Math.max(array.length, 1) * CELL_W + CELL_PAD * 2;
-}
-
-function getColours(node) {
-    if (node.type === "pivot")  return TYPE_COLOURS.pivot;
-    if (node.type === "sorted") return TYPE_COLOURS.sorted;
-    return STATE_COLOURS[node.state] ?? STATE_COLOURS.idle;
-}
-
-export default function QuickRenderer({ step }) {
-    if (!step || !step.nodes || step.nodes.length === 0) {
-        return <div className="text-sm text-gray-400">No data to display.</div>;
+    if (!array || array.length === 0) {
+        return <div className="text-sm text-gray-400">No array to display.</div>;
     }
 
-    const { nodes, activeNodeId } = step;
+    const pivotIndex    = step?.pivotIndex   ?? null;
+    const leftPartition = new Set(step?.leftPartition  ?? []);
+    const rightPartition= new Set(step?.rightPartition ?? []);
+    const activeRange   = step?.activeRange  ?? null;
+    const sorted        = step?.sortedIndices instanceof Set
+        ? step.sortedIndices
+        : new Set(step?.sortedIndices ?? []);
+    const swapped       = step?.swapped ?? null;
 
-    const maxLevel = Math.max(...nodes.map(n => n.level), 0);
-    const svgH = Math.max(MIN_SVG_H, (maxLevel + 1) * LEVEL_HEIGHT + 80);
+    const BOX_W   = 48;
+    const BOX_H   = 48;
+    const GAP     = 8;
+    const ARROW_H = 36;
+    const INDEX_H = 20;
+    const n       = array.length;
+    const svgW    = n * BOX_W + (n - 1) * GAP;
+    const svgH    = BOX_H + ARROW_H + INDEX_H + 16;
 
-    function renderArrows() {
-        return nodes.flatMap(node => {
-            const arrows = [];
-            const px = nodeX(node.position);
-            const py = nodeY(node.level) + BOX_H;
+    function boxColour(i) {
+        if (sorted.has(i))        return { fill: "#bbf7d0", stroke: "#16a34a" }; // green
+        if (swapped && (swapped[0] === i || swapped[1] === i))
+                                  return { fill: "#fde68a", stroke: "#d97706" }; // amber
+        if (i === pivotIndex)     return { fill: "#e9d5ff", stroke: "#7c3aed" }; // purple
+        if (leftPartition.has(i)) return { fill: "#bfdbfe", stroke: "#3b82f6" }; // blue
+        if (rightPartition.has(i))return { fill: "#fed7aa", stroke: "#f97316" }; // orange
 
-            // left child arrow
-            if (node.leftChildId) {
-                const child = nodes.find(n => n.id === node.leftChildId);
-                if (child) {
-                    const cx = nodeX(child.position);
-                    const cy = nodeY(child.level);
-                    arrows.push(
-                        <line
-                            key={`${node.id}-left`}
-                            x1={px} y1={py}
-                            x2={cx} y2={cy}
-                            stroke="#94a3b8"
-                            strokeWidth={1.5}
-                            markerEnd="url(#arrow)"
-                        />
-                    );
-                }
-            }
+        // dim elements outside active range
+        if (activeRange) {
+            const [l, r] = activeRange;
+            if (i < l || i > r)   return { fill: "#f8fafc", stroke: "#cbd5e1" }; // very faded
+        }
 
-            // mid (pivot) child arrow
-            if (node.midChildId) {
-                const child = nodes.find(n => n.id === node.midChildId);
-                if (child) {
-                    const cx = nodeX(child.position);
-                    const cy = nodeY(child.level);
-                    arrows.push(
-                        <line
-                            key={`${node.id}-mid`}
-                            x1={px} y1={py}
-                            x2={cx} y2={cy}
-                            stroke="#7c3aed"
-                            strokeWidth={1.5}
-                            strokeDasharray="4 2"
-                            markerEnd="url(#arrowPurple)"
-                        />
-                    );
-                }
-            }
-
-            // right child arrow
-            if (node.rightChildId) {
-                const child = nodes.find(n => n.id === node.rightChildId);
-                if (child) {
-                    const cx = nodeX(child.position);
-                    const cy = nodeY(child.level);
-                    arrows.push(
-                        <line
-                            key={`${node.id}-right`}
-                            x1={px} y1={py}
-                            x2={cx} y2={cy}
-                            stroke="#94a3b8"
-                            strokeWidth={1.5}
-                            markerEnd="url(#arrow)"
-                        />
-                    );
-                }
-            }
-
-            return arrows;
-        });
+        return { fill: "#f1f5f9", stroke: "#94a3b8" }; // default slate
     }
 
-    function renderLabels() {
-        return nodes.flatMap(node => {
-            const labels = [];
-            const py = nodeY(node.level) + BOX_H + 12;
+    function renderArrow() {
+        if (pivotIndex === null) return null;
 
-            if (node.leftChildId && node.leftLabel) {
-                const child = nodes.find(n => n.id === node.leftChildId);
-                if (child) {
-                    const cx = nodeX(child.position);
-                    labels.push(
-                        <text
-                            key={`${node.id}-leftlabel`}
-                            x={cx}
-                            y={py}
-                            textAnchor="middle"
-                            fontSize="11"
-                            fill="#3b82f6"
-                            fontWeight="600"
-                        >
-                            {node.leftLabel}
-                        </text>
-                    );
-                }
-            }
+        const x1 = pivotIndex * (BOX_W + GAP) + BOX_W / 2;
+        const y  = BOX_H + 4;
+        const colour = "#7c3aed";
 
-            if (node.rightChildId && node.rightLabel) {
-                const child = nodes.find(n => n.id === node.rightChildId);
-                if (child) {
-                    const cx = nodeX(child.position);
-                    labels.push(
-                        <text
-                            key={`${node.id}-rightlabel`}
-                            x={cx}
-                            y={py}
-                            textAnchor="middle"
-                            fontSize="11"
-                            fill="#f97316"
-                            fontWeight="600"
-                        >
-                            {node.rightLabel}
-                        </text>
-                    );
-                }
-            }
-
-            return labels;
-        });
-    }
-
-    function renderNodes() {
-        return nodes.map(node => {
-            const x        = nodeX(node.position);
-            const y        = nodeY(node.level);
-            const bw       = boxWidth(node.array);
-            const colours  = getColours(node);
-            const isActive = node.id === activeNodeId;
-
-            return (
-                <g key={node.id}>
-                    {/* outer box */}
-                    <rect
-                        x={x - bw / 2}
-                        y={y}
-                        width={bw}
-                        height={BOX_H}
-                        rx={6}
-                        fill={colours.fill}
-                        stroke={colours.stroke}
-                        strokeWidth={isActive ? 3 : 1.5}
-                    />
-
-                    {/* pivot indicator label above box */}
-                    {node.type === "pivot" && (
-                        <text
-                            x={x}
-                            y={y - 6}
-                            textAnchor="middle"
-                            fontSize="10"
-                            fill="#7c3aed"
-                            fontWeight="700"
-                        >
-                            pivot
-                        </text>
-                    )}
-
-                    {/* cell dividers and values */}
-                    {node.array.map((val, i) => {
-                        const cellX = x - bw / 2 + CELL_PAD + i * CELL_W;
-                        return (
-                            <g key={i}>
-                                {i > 0 && (
-                                    <line
-                                        x1={cellX}
-                                        y1={y + 6}
-                                        x2={cellX}
-                                        y2={y + BOX_H - 6}
-                                        stroke={colours.stroke}
-                                        strokeWidth={1}
-                                        opacity={0.4}
-                                    />
-                                )}
-                                <text
-                                    x={cellX + CELL_W / 2 - CELL_PAD / node.array.length}
-                                    y={y + BOX_H / 2 + 5}
-                                    textAnchor="middle"
-                                    fontSize="13"
-                                    fontWeight={isActive ? "700" : "500"}
-                                    fill="#1e293b"
-                                >
-                                    {val}
-                                </text>
-                            </g>
-                        );
-                    })}
-                </g>
-            );
-        });
+        // small downward arrow pointing to the pivot box
+        return (
+            <g>
+                <defs>
+                    <marker
+                        id={arrowId}
+                        markerWidth="6"
+                        markerHeight="6"
+                        refX="3"
+                        refY="3"
+                        orient="auto"
+                    >
+                        <path d="M0,0 L6,3 L0,6 Z" fill={colour} />
+                    </marker>
+                </defs>
+                <text
+                    x={x1}
+                    y={y + ARROW_H * 0.5}
+                    textAnchor="middle"
+                    fontSize="10"
+                    fill={colour}
+                    fontWeight="700"
+                >
+                    pivot
+                </text>
+            </g>
+        );
     }
 
     return (
-        <div className="flex flex-col items-center justify-center gap-4 w-full h-full overflow-auto">
+        <div className="flex flex-col items-center justify-center gap-4 w-full h-full overflow-x-auto py-2">
             <svg
-                width={SVG_WIDTH}
+                width={svgW}
                 height={svgH}
-                style={{ maxWidth: "100%", overflow: "visible" }}
+                style={{ overflow: "visible", minWidth: svgW }}
             >
-                <defs>
-                    <marker
-                        id="arrow"
-                        markerWidth="6"
-                        markerHeight="6"
-                        refX="3"
-                        refY="3"
-                        orient="auto"
-                    >
-                        <path d="M0,0 L6,3 L0,6 Z" fill="#94a3b8" />
-                    </marker>
-                    <marker
-                        id="arrowPurple"
-                        markerWidth="6"
-                        markerHeight="6"
-                        refX="3"
-                        refY="3"
-                        orient="auto"
-                    >
-                        <path d="M0,0 L6,3 L0,6 Z" fill="#7c3aed" />
-                    </marker>
-                </defs>
+                {array.map((val, i) => {
+                    const x = i * (BOX_W + GAP);
+                    const { fill, stroke } = boxColour(i);
+                    return (
+                        <g key={i}>
+                            <rect
+                                x={x} y={0}
+                                width={BOX_W} height={BOX_H}
+                                rx={6}
+                                fill={fill}
+                                stroke={stroke}
+                                strokeWidth={i === pivotIndex ? 2.5 : 1.5}
+                            />
+                            <text
+                                x={x + BOX_W / 2}
+                                y={BOX_H / 2 + 5}
+                                textAnchor="middle"
+                                fontSize="15"
+                                fontWeight={i === pivotIndex ? "700" : "500"}
+                                fill="#1e293b"
+                            >
+                                {val}
+                            </text>
+                            {/* index label */}
+                            <text
+                                x={x + BOX_W / 2}
+                                y={BOX_H + INDEX_H - 4}
+                                textAnchor="middle"
+                                fontSize="11"
+                                fill="#94a3b8"
+                            >
+                                {i}
+                            </text>
+                        </g>
+                    );
+                })}
 
-                {/* render order: arrows → labels → nodes */}
-                {renderArrows()}
-                {renderLabels()}
-                {renderNodes()}
+                {renderArrow()}
             </svg>
 
+            {/* active range label */}
+            {activeRange && (
+                <div className="text-xs text-gray-500 font-mono">
+                    Active range: [{activeRange[0]}–{activeRange[1]}]
+                </div>
+            )}
+
             {/* legend */}
-            <div className="flex gap-4 text-xs text-gray-600">
-                <LegendItem colour="#fde68a" border="#d97706" label="Active"     />
-                <LegendItem colour="#e9d5ff" border="#7c3aed" label="Pivot"      />
-                <LegendItem colour="#bbf7d0" border="#16a34a" label="Sorted"     />
-                <LegendItem colour="#f1f5f9" border="#94a3b8" label="Partition"  />
+            <div className="flex flex-wrap gap-3 text-xs text-gray-600 justify-center">
+                <LegendItem colour="#e9d5ff" border="#7c3aed" label="Pivot"         />
+                <LegendItem colour="#bfdbfe" border="#3b82f6" label="≤ pivot (left)" />
+                <LegendItem colour="#fed7aa" border="#f97316" label="> pivot (right)" />
+                <LegendItem colour="#fde68a" border="#d97706" label="Swapped"       />
+                <LegendItem colour="#bbf7d0" border="#16a34a" label="Sorted"        />
+                <LegendItem colour="#f1f5f9" border="#94a3b8" label="Unsorted"      />
             </div>
         </div>
     );

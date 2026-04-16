@@ -1,194 +1,181 @@
 export function generateQuickSteps(inputArray) {
     const steps = [];
     const arr = [...inputArray];
+    const n = arr.length;
+    const sortedIndices = new Set();
     let comparisons = 0;
     let swaps = 0;
 
-    const nodeMap = {};
-    let nodeCounter = 0;
-
-    function makeNode(array, level, position, type = "partition", parentId = null, pivotValue = null) {
-        const id = `node_${nodeCounter++}`;
-        nodeMap[id] = {
-            id,
-            array: [...array],
-            pivotValue,
-            type,
-            level,
-            position,
-            state: "idle",
-            leftChildId:  null,
-            midChildId:   null,
-            rightChildId: null,
-            parentId,
-            leftLabel:  null,
-            rightLabel: null,
-        };
-        return id;
-    }
-
-    function snapshot() {
-        return Object.values(nodeMap).map(n => ({ ...n, array: [...n.array] }));
-    }
-
-    // root node
-    const rootId = makeNode(arr, 0, 0.5, "partition", null, null);
-    nodeMap[rootId].state = "active";
-
     steps.push({
-        nodes: snapshot(),
-        activeNodeId: rootId,
-        explanation: "Starting Quick Sort. The full array is our starting point. We will pick a pivot and partition the array around it.",
+        array: [...arr],
+        pivotIndex: null,
+        leftPartition: [],
+        rightPartition: [],
+        activeRange: [0, n - 1],
+        sortedIndices: new Set(sortedIndices),
+        swapped: null,
+        explanation: "Starting Quick Sort. We will select a pivot, partition the array around it, then recursively sort each side.",
         explanationParts: {
-            rule: "Quick Sort selects a pivot element and partitions the array so all smaller elements are on the left and all larger are on the right.",
-            reason: "The pivot will end up in its exact final sorted position after each partition step.",
-            effect: "The last element will be selected as the pivot using the Lomuto partition scheme.",
+            rule: "Quick Sort selects a pivot and partitions the array so all smaller elements are left and all larger are right.",
+            reason: "The pivot ends up in its exact final sorted position after each partition.",
+            effect: "The last element of the full array will be selected as the first pivot.",
         },
         counters: { comparisons, swaps },
         phase: "Start",
     });
 
-    function quickSort(nodeId, array, level, leftPos, rightPos) {
-        if (array.length === 0) return;
-
-        if (array.length === 1) {
-            nodeMap[nodeId].state = "sorted";
-            nodeMap[nodeId].type  = "sorted";
-            steps.push({
-                nodes: snapshot(),
-                activeNodeId: nodeId,
-                explanation: `[${array[0]}] is a single element — already sorted and in its final position.`,
-                explanationParts: {
-                    rule: "A single element array is already sorted — this is the base case.",
-                    reason: `[${array[0]}] cannot be divided further.`,
-                    effect: `${array[0]} is locked in its final sorted position.`,
-                },
-                counters: { comparisons, swaps },
-                phase: "Base case",
-            });
+    function quickSort(low, high) {
+        if (low >= high) {
+            if (low === high) {
+                sortedIndices.add(low);
+                steps.push({
+                    array: [...arr],
+                    pivotIndex: null,
+                    leftPartition: [],
+                    rightPartition: [],
+                    activeRange: [low, high],
+                    sortedIndices: new Set(sortedIndices),
+                    swapped: null,
+                    explanation: `Single element ${arr[low]} at index ${low} — already in its final sorted position.`,
+                    explanationParts: {
+                        rule: "A single element is always sorted — base case reached.",
+                        reason: `Only one element remains in this partition.`,
+                        effect: `${arr[low]} is locked at index ${low}.`,
+                    },
+                    counters: { comparisons, swaps },
+                    phase: "Base case",
+                });
+            }
             return;
         }
 
-        // select pivot — last element (Lomuto)
-        const pivotValue = array[array.length - 1];
-        const pivotIndex = array.length - 1;
-
-        nodeMap[nodeId].pivotValue = pivotValue;
-        nodeMap[nodeId].state      = "active";
+        const pivotValue = arr[high];
 
         steps.push({
-            nodes: snapshot(),
-            activeNodeId: nodeId,
-            explanation: `Selecting pivot: ${pivotValue} (last element at index ${pivotIndex} of this partition).`,
+            array: [...arr],
+            pivotIndex: high,
+            leftPartition: [],
+            rightPartition: [],
+            activeRange: [low, high],
+            sortedIndices: new Set(sortedIndices),
+            swapped: null,
+            explanation: `Partitioning indices ${low}–${high}. Pivot selected: ${pivotValue} (index ${high}).`,
             explanationParts: {
-                rule: "Lomuto partition scheme always picks the last element as the pivot.",
-                reason: `The last element of [${array.join(", ")}] is ${pivotValue}.`,
-                effect: `${pivotValue} will be placed in its final sorted position. Elements ≤ ${pivotValue} go left, elements > ${pivotValue} go right.`,
+                rule: "Lomuto scheme: pick the last element of the current range as pivot.",
+                reason: `arr[${high}] = ${pivotValue} is the last element in range [${low}–${high}].`,
+                effect: `Elements ≤ ${pivotValue} will move left, elements > ${pivotValue} will move right.`,
             },
             counters: { comparisons, swaps },
-            phase: `Select pivot`,
+            phase: "Select pivot",
         });
 
-        // partition into left and right
-        const leftArray  = [];
-        const rightArray = [];
+        let i = low - 1;
+        const leftIndices = [];
+        const rightIndices = [];
 
-        for (let i = 0; i < array.length - 1; i++) {
+        for (let j = low; j < high; j++) {
             comparisons++;
-            if (array[i] <= pivotValue) {
-                leftArray.push(array[i]);
+            const isSmaller = arr[j] <= pivotValue;
+
+            steps.push({
+                array: [...arr],
+                pivotIndex: high,
+                leftPartition: [...leftIndices],
+                rightPartition: [...rightIndices],
+                activeRange: [low, high],
+                sortedIndices: new Set(sortedIndices),
+                swapped: null,
+                explanation: isSmaller
+                    ? `${arr[j]} ≤ pivot (${pivotValue}): moves into the left (≤) partition.`
+                    : `${arr[j]} > pivot (${pivotValue}): stays in the right (>) partition.`,
+                explanationParts: {
+                    rule: "Compare each element with the pivot.",
+                    reason: isSmaller
+                        ? `${arr[j]} ≤ ${pivotValue} so it belongs on the left.`
+                        : `${arr[j]} > ${pivotValue} so it belongs on the right.`,
+                    effect: isSmaller
+                        ? `Increment boundary and swap ${arr[j]} into the left partition.`
+                        : `No swap — ${arr[j]} stays where it is.`,
+                },
+                counters: { comparisons, swaps },
+                phase: `Scan j=${j}`,
+            });
+
+            if (isSmaller) {
+                i++;
+                leftIndices.push(j);
+                if (i !== j) {
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                    swaps++;
+
+                    steps.push({
+                        array: [...arr],
+                        pivotIndex: high,
+                        leftPartition: [...leftIndices],
+                        rightPartition: [...rightIndices],
+                        activeRange: [low, high],
+                        sortedIndices: new Set(sortedIndices),
+                        swapped: [i, j],
+                        explanation: `Swapped ${arr[j]} and ${arr[i]}: ${arr[i]} is now in the left partition at index ${i}.`,
+                        explanationParts: {
+                            rule: "Swap the element into the growing left partition.",
+                            reason: `${arr[i]} ≤ ${pivotValue} so it must be on the left side.`,
+                            effect: `Left partition boundary is now at index ${i}.`,
+                        },
+                        counters: { comparisons, swaps },
+                        phase: `Swap [${i}] ↔ [${j}]`,
+                    });
+                }
             } else {
-                rightArray.push(array[i]);
+                rightIndices.push(j);
             }
         }
 
-        swaps++;
+        // place pivot in final position
+        const pivotFinalIndex = i + 1;
+        if (pivotFinalIndex !== high) {
+            [arr[pivotFinalIndex], arr[high]] = [arr[high], arr[pivotFinalIndex]];
+            swaps++;
+        }
+
+        sortedIndices.add(pivotFinalIndex);
 
         steps.push({
-            nodes: snapshot(),
-            activeNodeId: nodeId,
-            explanation: `Partitioning around pivot ${pivotValue}: left [${leftArray.join(", ") || "empty"}] | pivot [${pivotValue}] | right [${rightArray.join(", ") || "empty"}].`,
+            array: [...arr],
+            pivotIndex: pivotFinalIndex,
+            leftPartition: leftIndices,
+            rightPartition: rightIndices,
+            activeRange: [low, high],
+            sortedIndices: new Set(sortedIndices),
+            swapped: pivotFinalIndex !== high ? [pivotFinalIndex, high] : null,
+            explanation: `Pivot ${pivotValue} placed at index ${pivotFinalIndex} — its final sorted position.`,
             explanationParts: {
-                rule: "Scan all elements except the pivot and place them into left (≤ pivot) or right (> pivot) groups.",
-                reason: `Elements ≤ ${pivotValue}: [${leftArray.join(", ") || "none"}]. Elements > ${pivotValue}: [${rightArray.join(", ") || "none"}].`,
-                effect: `${pivotValue} is now in its final sorted position. Recursively sort left and right groups.`,
+                rule: "Place the pivot at i+1 — all elements to its left are ≤ pivot, all to its right are > pivot.",
+                reason: `After scanning, the boundary i = ${i}, so pivot belongs at index ${pivotFinalIndex}.`,
+                effect: `${pivotValue} is locked. Recursively sort [${low}–${pivotFinalIndex - 1}] and [${pivotFinalIndex + 1}–${high}].`,
             },
             counters: { comparisons, swaps },
-            phase: `Partition`,
+            phase: `Pivot placed at ${pivotFinalIndex}`,
         });
 
-        // calculate positions for children
-        const midPos   = (leftPos + rightPos) / 2;
-        const leftSpan  = midPos - leftPos;
-        const rightSpan = rightPos - midPos;
-
-        const leftChildPos  = leftArray.length  > 0 ? leftPos  + leftSpan  * 0.3 : leftPos;
-        const rightChildPos = rightArray.length > 0 ? rightPos - rightSpan * 0.3 : rightPos;
-        const pivotChildPos = midPos;
-
-        // create pivot node (always)
-        const pivotNodeId = makeNode([pivotValue], level + 1, pivotChildPos, "pivot", nodeId, pivotValue);
-        nodeMap[pivotNodeId].state = "sorted";
-        nodeMap[nodeId].midChildId = pivotNodeId;
-        nodeMap[nodeId].leftLabel  = leftArray.length  > 0 ? `≤ ${pivotValue}` : null;
-        nodeMap[nodeId].rightLabel = rightArray.length > 0 ? `> ${pivotValue}`  : null;
-
-        // create left child node if needed
-        let leftId = null;
-        if (leftArray.length > 0) {
-            leftId = makeNode(leftArray, level + 1, leftChildPos, "partition", nodeId);
-            nodeMap[leftId].state = "active";
-            nodeMap[nodeId].leftChildId = leftId;
-        }
-
-        // create right child node if needed
-        let rightId = null;
-        if (rightArray.length > 0) {
-            rightId = makeNode(rightArray, level + 1, rightChildPos, "partition", nodeId);
-            nodeMap[rightId].state = "active";
-            nodeMap[nodeId].rightChildId = rightId;
-        }
-
-        nodeMap[nodeId].state = "idle";
-
-        steps.push({
-            nodes: snapshot(),
-            activeNodeId: pivotNodeId,
-            explanation: `Pivot ${pivotValue} is placed in its final position. Left group: [${leftArray.join(", ") || "empty"}], Right group: [${rightArray.join(", ") || "empty"}].`,
-            explanationParts: {
-                rule: "After partitioning, the pivot is in its correct sorted position.",
-                reason: `All elements to the left are ≤ ${pivotValue} and all to the right are > ${pivotValue}.`,
-                effect: `Recursively applying Quick Sort to left [${leftArray.join(", ") || "empty"}] and right [${rightArray.join(", ") || "empty"}].`,
-            },
-            counters: { comparisons, swaps },
-            phase: `Pivot placed`,
-        });
-
-        // recurse on left
-        if (leftId !== null) {
-            quickSort(leftId, leftArray, level + 1, leftPos, midPos);
-        }
-
-        // recurse on right
-        if (rightId !== null) {
-            quickSort(rightId, rightArray, level + 1, midPos, rightPos);
-        }
+        quickSort(low, pivotFinalIndex - 1);
+        quickSort(pivotFinalIndex + 1, high);
     }
 
-    quickSort(rootId, arr, 0, 0.05, 0.95);
-
-    // mark everything sorted
-    Object.values(nodeMap).forEach(n => {
-        n.state = "sorted";
-    });
+    quickSort(0, n - 1);
 
     steps.push({
-        nodes: snapshot(),
-        activeNodeId: null,
+        array: [...arr],
+        pivotIndex: null,
+        leftPartition: [],
+        rightPartition: [],
+        activeRange: null,
+        sortedIndices: new Set(Array.from({ length: n }, (_, i) => i)),
+        swapped: null,
         explanation: "Quick Sort complete! All elements are in their final sorted positions.",
         explanationParts: {
-            rule: "When all partitions are size 1 or empty, every element is in its correct final position.",
-            reason: `Completed with ${comparisons} comparisons and ${swaps} partition operations.`,
+            rule: "When all partitions are size 0 or 1, every element is in its correct position.",
+            reason: `Completed with ${comparisons} comparisons and ${swaps} swaps.`,
             effect: "The array is fully sorted in ascending order.",
         },
         counters: { comparisons, swaps },
