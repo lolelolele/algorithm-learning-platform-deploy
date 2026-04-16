@@ -105,7 +105,7 @@ export default function BFS() {
             }
 
             /* supports template switching and selcting start/end nodes */
-            editorPanel={
+            graphEditor={
                 <div className="space-y-4 text-sm">
 
                     <div>
