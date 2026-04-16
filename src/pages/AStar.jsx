@@ -100,6 +100,41 @@ export default function AStar() {
         }
     }
 
+    // get the edge key used in weightEdits
+    function edgeKey(e) {
+        return `${e.from}-${e.to}`;
+    }
+
+    // get current displayed weight for an edge
+    function displayWeight(e) {
+        const key = edgeKey(e);
+        return weightEdits[key] !== undefined ? weightEdits[key] : e.weight;
+    }
+
+    // apply all weight edits to the graph
+    function applyWeights() {
+        // validate all edits are positive numbers
+        for (const [key, val] of Object.entries(weightEdits)) {
+            const num = Number(val);
+            if (isNaN(num) || num <= 0) {
+                setWeightError(`Invalid weight for edge ${key} — must be a positive number.`);
+                return;
+            }
+        }
+
+        setWeightError("");
+        const updated = cloneGraph(graph);
+        updated.edges = updated.edges.map(e => {
+            const key = edgeKey(e);
+            return weightEdits[key] !== undefined
+                ? { ...e, weight: Number(weightEdits[key]) }
+                : e;
+        });
+        setGraph(updated);
+        setStepIndex(0);
+        setIsPlaying(false);
+    }
+
     return (
         <AlgorithmLayout
             title="A* Search Algorithm"
