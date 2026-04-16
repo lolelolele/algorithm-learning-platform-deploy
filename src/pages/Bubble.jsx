@@ -40,8 +40,8 @@ export default function Bubble() {
     };
 
     const steps = generateBubbleSteps(array);
-    const safeIndex = Math.min(stepIndex, steps.length - 1);
-    const currentStep = steps[safeIndex];
+    const safeStepIndex = Math.min(stepIndex, steps.length - 1);
+    const currentStep = steps[safeStepIndex];
 
     useEffect(() => {
         if (!isPlaying) return;
