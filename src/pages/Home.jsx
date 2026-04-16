@@ -253,6 +253,43 @@ const algorithms = [
     },
 ];
 
+const howToUseSteps = [
+    {
+        number: "01",
+        title: "Pick an Algorithm",
+        description: "Choose from Graph Pathfinding, Sorting, or BST Operations using the navigation bar or the carousel below.",
+    },
+    {
+        number: "02",
+        title: "Step Through It",
+        description: "Use the playback controls to step forward and backward through each stage. The Why This Step panel explains every decision.",
+    },
+    {
+        number: "03",
+        title: "Try Challenge Mode",
+        description: "Test your understanding by predicting what the algorithm does next before each step is revealed.",
+    },
+];
+
+const features = [
+    {
+        title: "Step-by-step Visualisation",
+        description: "Every algorithm is broken down into individual steps with visual highlighting and plain-English explanations.",
+    },
+    {
+        title: "Challenge Mode",
+        description: "Predict what the algorithm does next before each step is revealed. Track your score as you improve.",
+    },
+    {
+        title: "Real-time Metrics",
+        description: "Track comparisons, swaps, and visited nodes live as the algorithm runs.",
+    },
+    {
+        title: "Custom Input",
+        description: "Enter your own arrays or adjust edge weights to see how different inputs affect algorithm behaviour.",
+    },
+];
+
 export default function Home() {
     return (
         // home page provides an overview and shows the project scope
