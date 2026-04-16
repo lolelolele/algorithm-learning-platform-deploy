@@ -83,7 +83,7 @@ export default function BSTSearch() {
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
 
-                    {/*bfs description*/}
+                    {/*bst search description*/}
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
@@ -93,7 +93,7 @@ export default function BSTSearch() {
                             </p>
                     </div>
 
-                    {/* steps on how bfs works */}
+                    {/* steps on how bst search works */}
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">

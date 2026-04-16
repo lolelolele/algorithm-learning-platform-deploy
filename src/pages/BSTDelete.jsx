@@ -128,7 +128,7 @@ export default function BSTDelete() {
                 </div>
             }
 
-            /* supports template switching and selcting start/end nodes */
+            /* supports preset switching, custom tree input and node to delete */
             graphEditor={
                 <div className="space-y-4 text-sm">
 
@@ -213,6 +213,7 @@ export default function BSTDelete() {
                         <span>{currentStep.visitedNodes?.length ?? 0}</span>
                     </div>
                     <div>
+                        <span className="font-medium">Case: </span>
                         <span className="text-gray-600">
                             {currentStep.deletedNode
                                 ? currentStep.highlightNodes?.length > 0
