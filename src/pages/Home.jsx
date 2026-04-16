@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom"
+import { useState, useEffect, useRef } from "react";
 
 // algorithm data for the carousel
 const algorithms = [
