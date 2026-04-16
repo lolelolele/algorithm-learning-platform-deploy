@@ -20,7 +20,7 @@ export default function BSTRenderer({ tree, step }) {
             className="bg-white"
         >
             {/* Legend */}
-            <foreignObject x="10" y="10" width="145" height="155">
+            <foreignObject x="5" y="-150" width="145" height="155">
                 <div className="rounded-md border bg-white/90 p-2 text-xs text-gray-700">
                     <div className="font-semibold mb-2">Legend:</div>
                     <div className="space-y-1">
