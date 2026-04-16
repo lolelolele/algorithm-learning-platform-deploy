@@ -43,30 +43,18 @@ export default function QuickRenderer({ array, step }) {
     }
 
     function renderArrow() {
-        if (pivotIndex === null) return null;
-
-        const x1 = pivotIndex * (BOX_W + GAP) + BOX_W / 2;
-        const y  = BOX_H + 4;
         const colour = "#7c3aed";
-
-        // small downward arrow pointing to the pivot box
-        return (
-            <g>
-                <defs>
-                    <marker
-                        id={arrowId}
-                        markerWidth="6"
-                        markerHeight="6"
-                        refX="3"
-                        refY="3"
-                        orient="auto"
-                    >
-                        <path d="M0,0 L6,3 L0,6 Z" fill={colour} />
-                    </marker>
-                </defs>
+        const swapColour = "#d97706";
+        const elements = [];
+    
+        // pivot label above pivot box
+        if (pivotIndex !== null) {
+            const x1 = pivotIndex * (BOX_W + GAP) + BOX_W / 2;
+            elements.push(
                 <text
+                    key="pivot-label"
                     x={x1}
-                    y={y + ARROW_H * 0.5}
+                    y={BOX_H + 16}
                     textAnchor="middle"
                     fontSize="10"
                     fill={colour}
@@ -74,10 +62,56 @@ export default function QuickRenderer({ array, step }) {
                 >
                     pivot
                 </text>
-            </g>
-        );
+            );
+        }
+    
+        // swap arrow between swapped pair
+        if (swapped) {
+            const x1 = swapped[0] * (BOX_W + GAP) + BOX_W / 2;
+            const x2 = swapped[1] * (BOX_W + GAP) + BOX_W / 2;
+            const y  = BOX_H + 4;
+            const mx = (x1 + x2) / 2;
+            const cy = y + ARROW_H * 0.75;
+            const path = `M ${x1} ${y} Q ${mx} ${cy} ${x2} ${y}`;
+    
+            elements.push(
+                <g key="swap-arrow">
+                    <defs>
+                        <marker
+                            id={arrowId}
+                            markerWidth="6"
+                            markerHeight="6"
+                            refX="3"
+                            refY="3"
+                            orient="auto"
+                        >
+                            <path d="M0,0 L6,3 L0,6 Z" fill={swapColour} />
+                        </marker>
+                    </defs>
+                    <path
+                        d={path}
+                        fill="none"
+                        stroke={swapColour}
+                        strokeWidth="2"
+                        markerEnd={`url(#${arrowId})`}
+                    />
+                    <text
+                        x={mx}
+                        y={cy - 4}
+                        textAnchor="middle"
+                        fontSize="11"
+                        fill={swapColour}
+                        fontWeight="600"
+                    >
+                        swap
+                    </text>
+                </g>
+            );
+        }
+    
+        return elements;
     }
-
+    
     return (
         <div className="flex flex-col items-center justify-center gap-4 w-full h-full overflow-x-auto py-2">
             <svg
