@@ -75,6 +75,7 @@ export default function BSTInsert() {
     return (
         <AlgorithmLayout
             title="Binary Search Tree (BST) Insert"
+            editorLabel="Tree Editor"
 
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
@@ -160,21 +161,21 @@ export default function BSTInsert() {
                         </button>
                     </div>
 
-                    {/* search value */}
+                    {/* insert value */}
                     <div>
-                        <label className="block font-medium mb-1">Search Value:</label>
+                        <label className="block font-medium mb-1">Insert Value:</label>
                         <div className="flex gap-2">
                             <input
                                 type="number"
                                 className="flex-1 rounded-md border p-2 text-sm"
-                                value={searchInput}
-                                onChange={e => setSearchInput(e.target.value)}
+                                value={insertInput}
+                                onChange={e => setInsertInput(e.target.value)}
                             />
                             <button
                                 className="rounded-md border px-3 py-1 text-sm hover:bg-gray-100"
                                 onClick={() => {
-                                    const v = parseInt(searchInput);
-                                    if (!isNaN(v)) setSearchValue(v);
+                                    const v = parseInt(insertInput);
+                                    if (!isNaN(v)) setInsertValue(v);
                                 }}
                             >
                                 Insert
