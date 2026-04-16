@@ -55,7 +55,7 @@ const algorithms = [
                 <text x="60" y="24" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">B</text>
                 <text x="60" y="64" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">C</text>
                 <text x="100" y="44" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#1e293b">G</text>
-                <text x="38" y="26" fontSize="7" fill="#6b7280">h=3</text>
+                <text x="30" y="26" fontSize="7" fill="#6b7280">h=3</text>
                 <text x="78" y="26" fontSize="7" fill="#16a34a">h=0</text>
             </svg>
         ),
@@ -193,7 +193,7 @@ const algorithms = [
                 ))}
                 <text x="60" y="52" textAnchor="middle" fontSize="8" fill="#7c3aed" fontWeight="600">pivot = 27</text>
                 <text x="25" y="65" textAnchor="middle" fontSize="7" fill="#3b82f6">≤ 27</text>
-                <text x="90" y="65" textAnchor="middle" fontSize="7" fill="#f97316">&gt; 27</text>
+                <text x="95" y="65" textAnchor="middle" fontSize="7" fill="#f97316">&gt; 27</text>
                 <line x1="60" y1="54" x2="35" y2="62" stroke="#94a3b8" strokeWidth="1"/>
                 <line x1="60" y1="54" x2="85" y2="62" stroke="#94a3b8" strokeWidth="1"/>
             </svg>
