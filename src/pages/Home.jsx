@@ -291,6 +291,30 @@ const features = [
 ];
 
 export default function Home() {
+
+    const [current, setCurrent] = useState(0);
+    const [paused, setPaused] = useState(false);
+    const intervalRef = useRef(null);
+
+    // auto advance every 3 seconds, pause on hover
+    useEffect(() => {
+        if (paused) return;
+        intervalRef.current = setInterval(() => {
+            setCurrent(c => (c + 1) % algorithms.length);
+        }, 3000);
+        return () => clearInterval(intervalRef.current);
+    }, [paused]);
+
+    function prev() {
+        setCurrent(c => (c - 1 + algorithms.length) % algorithms.length);
+    }
+
+    function next() {
+        setCurrent(c => (c + 1) % algorithms.length);
+    }
+
+    const algo = algorithms[current];
+
     return (
         // home page provides an overview and shows the project scope
         <div className="h-[calc(100vh-80px)] bg-gray-50 flex flex-col overflow-hidden">
