@@ -121,7 +121,7 @@ export default function Bubble() {
                             Array Size: {arraySize}
                         </label>
                         <input
-                            type="range" min={4} max={16}
+                            type="range" min={4} max={10}
                             value={arraySize}
                             onChange={e => setArraySize(Number(e.target.value))}
                             className="w-full"
