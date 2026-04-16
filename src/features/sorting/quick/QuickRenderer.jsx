@@ -21,22 +21,22 @@ export default function QuickRenderer({ array, step }) {
     const GAP     = 8;
     const ARROW_H = 36;
     const INDEX_H = 20;
-    const n       = array.length;
-    const svgW    = n * BOX_W + (n - 1) * GAP;
-    const svgH    = BOX_H + ARROW_H + INDEX_H + 16;
+    const n = array.length;
+    const svgW = n * BOX_W + (n - 1) * GAP;
+    const PIVOT_LABEL_H = 20;
+    const svgH = PIVOT_LABEL_H + BOX_H + ARROW_H + INDEX_H + 16;
 
     function boxColour(i) {
-        if (sorted.has(i))        return { fill: "#bbf7d0", stroke: "#16a34a" }; // green
-        if (swapped && (swapped[0] === i || swapped[1] === i))
-                                  return { fill: "#fde68a", stroke: "#d97706" }; // amber
-        if (i === pivotIndex)     return { fill: "#e9d5ff", stroke: "#7c3aed" }; // purple
+        if (sorted.has(i)) return { fill: "#bbf7d0", stroke: "#16a34a" }; // green
+        if (swapped && (swapped[0] === i || swapped[1] === i)) return { fill: "#fde68a", stroke: "#d97706" }; // amber
+        if (i === pivotIndex) return { fill: "#e9d5ff", stroke: "#7c3aed" }; // purple
         if (leftPartition.has(i)) return { fill: "#bfdbfe", stroke: "#3b82f6" }; // blue
-        if (rightPartition.has(i))return { fill: "#fed7aa", stroke: "#f97316" }; // orange
+        if (rightPartition.has(i)) return { fill: "#fed7aa", stroke: "#f97316" }; // orange
 
         // dim elements outside active range
         if (activeRange) {
             const [l, r] = activeRange;
-            if (i < l || i > r)   return { fill: "#f8fafc", stroke: "#cbd5e1" }; // very faded
+            if (i < l || i > r) return { fill: "#f8fafc", stroke: "#cbd5e1" }; // very faded
         }
 
         return { fill: "#f1f5f9", stroke: "#94a3b8" }; // default slate
@@ -54,7 +54,7 @@ export default function QuickRenderer({ array, step }) {
                 <text
                     key="pivot-label"
                     x={x1}
-                    y={BOX_H + 16}
+                    y={PIVOT_LABEL_H - 6}
                     textAnchor="middle"
                     fontSize="10"
                     fill={colour}
@@ -69,7 +69,7 @@ export default function QuickRenderer({ array, step }) {
         if (swapped) {
             const x1 = swapped[0] * (BOX_W + GAP) + BOX_W / 2;
             const x2 = swapped[1] * (BOX_W + GAP) + BOX_W / 2;
-            const y  = BOX_H + 4;
+            const y  = PIVOT_LABEL_H + BOX_H + 4;
             const mx = (x1 + x2) / 2;
             const cy = y + ARROW_H * 0.75;
             const path = `M ${x1} ${y} Q ${mx} ${cy} ${x2} ${y}`;
@@ -111,7 +111,7 @@ export default function QuickRenderer({ array, step }) {
     
         return elements;
     }
-    
+
     return (
         <div className="flex flex-col items-center justify-center gap-4 w-full h-full overflow-x-auto py-2">
             <svg
@@ -125,7 +125,7 @@ export default function QuickRenderer({ array, step }) {
                     return (
                         <g key={i}>
                             <rect
-                                x={x} y={0}
+                                x={x} y={PIVOT_LABEL_H}
                                 width={BOX_W} height={BOX_H}
                                 rx={6}
                                 fill={fill}
@@ -134,7 +134,7 @@ export default function QuickRenderer({ array, step }) {
                             />
                             <text
                                 x={x + BOX_W / 2}
-                                y={BOX_H / 2 + 5}
+                                y={PIVOT_LABEL_H + BOX_H / 2 + 5}
                                 textAnchor="middle"
                                 fontSize="15"
                                 fontWeight={i === pivotIndex ? "700" : "500"}
@@ -145,7 +145,7 @@ export default function QuickRenderer({ array, step }) {
                             {/* index label */}
                             <text
                                 x={x + BOX_W / 2}
-                                y={BOX_H + INDEX_H - 4}
+                                y={PIVOT_LABEL_H + BOX_H + INDEX_H - 4}
                                 textAnchor="middle"
                                 fontSize="11"
                                 fill="#94a3b8"
