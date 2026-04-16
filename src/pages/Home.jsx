@@ -338,6 +338,79 @@ export default function Home() {
                 </div>
             </section>
 
+            {/* carousel */}
+            <section className="max-w-5xl mx-auto px-6 py-12">
+                <h2 className="text-xl font-semibold text-gray-800 mb-6 text-center">
+                    Explore Algorithms
+                </h2>
+
+                <div
+                    className="relative bg-white rounded-xl border shadow-sm overflow-hidden"
+                    onMouseEnter={() => setPaused(true)}
+                    onMouseLeave={() => setPaused(false)}
+                >
+                    <div className="flex items-stretch min-h-56">
+
+                        {/* left arrow */}
+                        <button
+                            onClick={prev}
+                            className="flex-shrink-0 w-12 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors border-r text-2xl"
+                        >
+                            ‹
+                        </button>
+
+                        {/* card content */}
+                        <div className="flex flex-1 items-center gap-8 px-8 py-6">
+
+                            {/* illustration */}
+                            <div className="flex-shrink-0 w-40 h-32 bg-gray-50 rounded-lg border flex items-center justify-center p-3">
+                                {algo.illustration}
+                            </div>
+
+                            {/* text */}
+                            <div className="flex-1 min-w-0">
+                                <span className={`inline-block text-xs font-medium px-2 py-0.5 rounded-full mb-2 ${algo.categoryColour}`}>
+                                    {algo.category}
+                                </span>
+                                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                                    {algo.name}
+                                </h3>
+                                <p className="text-gray-500 text-sm leading-relaxed mb-4">
+                                    {algo.description}
+                                </p>
+                                <Link
+                                    to={algo.path}
+                                    className="inline-block bg-gray-900 text-white text-sm px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
+                                >
+                                    Try it →
+                                </Link>
+                            </div>
+                        </div>
+
+                        {/* right arrow */}
+                        <button
+                            onClick={next}
+                            className="flex-shrink-0 w-12 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-gray-50 transition-colors border-l text-2xl"
+                        >
+                            ›
+                        </button>
+                    </div>
+
+                    {/* dot indicators */}
+                    <div className="flex justify-center gap-1.5 py-3 border-t bg-gray-50">
+                        {algorithms.map((_, i) => (
+                            <button
+                                key={i}
+                                onClick={() => setCurrent(i)}
+                                className={`w-2 h-2 rounded-full transition-colors ${
+                                    i === current ? "bg-gray-800" : "bg-gray-300"
+                                }`}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </section>
+
         </div>
     );
 }
