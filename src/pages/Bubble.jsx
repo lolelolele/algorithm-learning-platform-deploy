@@ -60,6 +60,10 @@ export default function Bubble() {
         return () => clearTimeout(timer);
     }, [isPlaying, speed, safeStepIndex, steps.length]);
 
+    useEffect(() => {
+        applyNewArray(presets[preset](arraySize));
+    }, [preset]);
+    
     return (
         <AlgorithmLayout
             title="Bubble Sort Algorithm"
