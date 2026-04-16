@@ -29,7 +29,7 @@ export function generateMergeSteps(inputArray) {
     }
 
     // root node — step 1: just the full array
-    const rootId = makeNode(arr, 0, 0, null);
+    const rootId = makeNode(arr, 0, 0.5, null);
     nodeMap[rootId].state = "active";
 
     steps.push({
@@ -64,21 +64,21 @@ export function generateMergeSteps(inputArray) {
         }
 
         const mid = Math.floor(array.length / 2);
-        const leftArray  = array.slice(0, mid);
+        const leftArray = array.slice(0, mid);
         const rightArray = array.slice(mid);
 
         const midPos = (leftPos + rightPos) / 2;
-        const leftChildPos  = (leftPos + midPos) / 2;
-        const rightChildPos = (midPos + rightPos) / 2;
+        const leftChildPos = leftPos + (midPos - leftPos) * 0.5;
+        const rightChildPos = midPos  + (rightPos - midPos) * 0.5;
 
         // create child nodes
-        const leftId  = makeNode(leftArray,  level + 1, leftChildPos,  nodeId);
+        const leftId = makeNode(leftArray, level + 1, leftChildPos, nodeId);
         const rightId = makeNode(rightArray, level + 1, rightChildPos, nodeId);
 
-        nodeMap[nodeId].leftChildId  = leftId;
+        nodeMap[nodeId].leftChildId = leftId;
         nodeMap[nodeId].rightChildId = rightId;
         nodeMap[nodeId].state = "idle";
-        nodeMap[leftId].state  = "active";
+        nodeMap[leftId].state = "active";
         nodeMap[rightId].state = "active";
 
         // divide step
@@ -96,13 +96,13 @@ export function generateMergeSteps(inputArray) {
         });
 
         // recurse
-        const sortedLeft  = mergeSort(leftId,  leftArray,  level + 1, leftPos,  midPos);
+        const sortedLeft = mergeSort(leftId,  leftArray,  level + 1, leftPos,  midPos);
         const sortedRight = mergeSort(rightId, rightArray, level + 1, midPos, rightPos);
 
         // merge step
-        nodeMap[leftId].state  = "merging";
+        nodeMap[leftId].state = "merging";
         nodeMap[rightId].state = "merging";
-        nodeMap[nodeId].state  = "active";
+        nodeMap[nodeId].state = "active";
 
         steps.push({
             nodes: snapshot(),
@@ -176,7 +176,7 @@ export function generateMergeSteps(inputArray) {
         return merged;
     }
 
-    mergeSort(rootId, arr, 0, 0, 1);
+    mergeSort(rootId, arr, 0, 0.1, 0.9);
 
     steps.push({
         nodes: snapshot(),

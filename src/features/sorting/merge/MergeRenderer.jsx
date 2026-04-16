@@ -14,7 +14,7 @@ const MIN_SVG_H    = 400;
 
 // converts a node's fractional position (0–1) to an x pixel coordinate
 function nodeX(position) {
-    return position * (SVG_WIDTH - 60) + 30;
+    return 40 + position * (SVG_WIDTH - 80);
 }
 
 function nodeY(level) {
