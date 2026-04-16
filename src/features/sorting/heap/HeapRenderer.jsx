@@ -242,7 +242,7 @@ export default function HeapRenderer({ array, step }) {
     }
 
     return (
-        <div className="flex flex-col items-center justify-center gap-3 w-full h-full overflow-auto">
+        <div className="flex flex-col items-center justify-center gap-3 w-full h-full overflow-auto pb-6">
             {/* phase label */}
             <div className="text-xs font-medium text-gray-500">
                 Heap Size: {heapSize} / {n}
@@ -260,7 +260,7 @@ export default function HeapRenderer({ array, step }) {
             </svg>
 
             {/* legend */}
-            <div className="flex flex-wrap gap-3 text-xs text-gray-600 justify-center">
+            <div className="flex flex-wrap gap-3 text-xs text-gray-600 justify-center mt-6">
                 <LegendItem colour="#fde68a" border="#d97706" label="Active"    />
                 <LegendItem colour="#bfdbfe" border="#3b82f6" label="Comparing" />
                 <LegendItem colour="#fecaca" border="#dc2626" label="Swapped"   />
