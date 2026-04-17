@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import TraversalRenderer from "../features/graph-pathfinding/traversal/TraversalRenderer";
 import { defaultGraph, templates } from "../features/graph-pathfinding/traversal/bfs/data/graphs";
 import { generateBFSSteps } from "../features/graph-pathfinding/traversal/bfs/logic/bfsSteps";
+import ChallengeMode from "../components/ChallengeMode";
+import { generateBFSChallengeQuestions } from "../features/graph-pathfinding/traversal/bfs/logic/bfsChallengeQuestions";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -32,12 +34,13 @@ export default function BFS() {
     const [speed, setSpeed] = useState(1);
 
     /* step-by-step execution trace for the current graph and endpoints */
-    const steps = generateBFSSteps(graph, startId);
-    console.log("BFS explanations:", steps.map(s => s.explanation));
+    const steps = useMemo(() => generateBFSSteps(graph, startId), [graph, startId]);
     
     /* prevents out of range access if the steps array shrinks after changing graph */
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
+
+    const challengeQuestions = useMemo(() => generateBFSChallengeQuestions(steps), [steps]);
 
     /* if the start/end changes -> reset playback */
     useEffect(() => {
@@ -203,16 +206,25 @@ export default function BFS() {
 
             /* GraphRender draws the graph and highlights algorithm state for the current step */
             visualisation={
-                <TraversalRenderer
-                    graph={graph}
-                    step={{
-                        startId: startId,
-                        currentNode: currentStep.currentNode,
-                        visited: Array.from(currentStep.visitedNodes),
-                        frontier: currentStep.queue,
-                        highlightEdges: Array.from(currentStep.highlightEdges),
-                    }}
-                />
+                <ChallengeMode
+                    steps={steps}
+                    currentStepIndex={safeStepIndex}
+                    onStepChange={setStepIndex}
+                    isPlaying={isPlaying}
+                    onPlayingChange={setIsPlaying}
+                    questions={challengeQuestions}
+                >
+                    <TraversalRenderer
+                        graph={graph}
+                        step={{
+                            startId: startId,
+                            currentNode: currentStep.currentNode,
+                            visited: Array.from(currentStep.visitedNodes),
+                            frontier: currentStep.queue,
+                            highlightEdges: Array.from(currentStep.highlightEdges),
+                        }}
+                    />
+                </ChallengeMode>
             }
 
             /* showcases internal state (frontier & counters) e*/
