@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import QuickRenderer from "../features/sorting/quick/QuickRenderer";
 import { generateQuickSteps } from "../features/sorting/quick/logic/quickSteps";
 import { defaultArray, presets } from "../features/sorting/data/arrays";
+import ChallengeMode from "../components/ChallengeMode";
+import { generateQuickChallengeQuestions } from "../features/sorting/quick/logic/quickChallengeQuestions";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -43,9 +45,10 @@ export default function Quick() {
         applyNewArray(parsed);
     };
 
-    const steps = generateQuickSteps(array);
+    const steps = useMemo(() => generateQuickSteps(array), [array]);
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
+    const challengeQuestions = useMemo(() => generateQuickChallengeQuestions(steps), [steps]);
 
     useEffect(() => {
         if (!isPlaying) return;
@@ -166,10 +169,19 @@ export default function Quick() {
             }
 
             visualisation={
-                <QuickRenderer
-                    array={currentStep?.array ?? array}
-                    step={currentStep}
-                />
+                <ChallengeMode
+                    steps={steps}
+                    currentStepIndex={safeStepIndex}
+                    onStepChange={setStepIndex}
+                    isPlaying={isPlaying}
+                    onPlayingChange={setIsPlaying}
+                    questions={challengeQuestions}
+                >
+                    <QuickRenderer
+                        array={currentStep?.array ?? array}
+                        step={currentStep}
+                    />
+                </ChallengeMode>
             }
 
             metrics={
