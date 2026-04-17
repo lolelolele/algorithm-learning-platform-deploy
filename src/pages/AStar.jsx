@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import WeightedGraphRenderer from "../features/graph-pathfinding/weighted/WeightedGraphRenderer";
 import { defaultGraph, templates } from "../features/graph-pathfinding/weighted/a-star/data/graphs";
 import { generateAStarSteps } from "../features/graph-pathfinding/weighted/a-star/logic/aStarSteps";
+import ChallengeMode from "../components/ChallengeMode";
+import { generateAStarChallengeQuestions } from "../features/graph-pathfinding/weighted/a-star/logic/aStarChallengeQuestions";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -37,11 +39,13 @@ export default function AStar() {
     const [stepIndex, setStepIndex] = useState(0);
 
     /* step-by-step execution trace for the current graph and endpoints */
-    const steps = generateAStarSteps(graph, startId, endId);
+    const steps = useMemo(() => generateAStarSteps(graph, startId, endId), [graph, startId, endId]);
     
     /* prevents out of range access if the steps array shrinks after changing graph */
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
+
+    const challengeQuestions = useMemo(() => generateAStarChallengeQuestions(steps), [steps]);
 
     /* Playback controls:
         - isPlaying: whether autoplay is running
@@ -299,19 +303,28 @@ export default function AStar() {
 
             /* GraphRender draws the graph and highlights algorithm state for the current step */
             visualisation={
-                <WeightedGraphRenderer
-                    graph={graph}
-                    startId={startId}
-                    endId={endId}
-                    step={{
-                        currentNode: currentStep.currentNode,
-                        visited: currentStep.visited,
-                        frontier: currentStep.openList,
-                        activeEdge: currentStep.activeEdge,
-                        shortestPathNodes: currentStep.shortestPathNodes,
-                        shortestPathEdges: currentStep.shortestPathEdges,
-                    }}
-                />
+                <ChallengeMode
+                    steps={steps}
+                    currentStepIndex={safeStepIndex}
+                    onStepChange={setStepIndex}
+                    isPlaying={isPlaying}
+                    onPlayingChange={setIsPlaying}
+                    questions={challengeQuestions}
+                >
+                    <WeightedGraphRenderer
+                        graph={graph}
+                        startId={startId}
+                        endId={endId}
+                        step={{
+                            currentNode: currentStep.currentNode,
+                            visited: currentStep.visited,
+                            frontier: currentStep.openList,
+                            activeEdge: currentStep.activeEdge,
+                            shortestPathNodes: currentStep.shortestPathNodes,
+                            shortestPathEdges: currentStep.shortestPathEdges,
+                        }}
+                    />
+                </ChallengeMode>
             }
 
             /* showcases internal state (frontier & counters) e*/
