@@ -47,6 +47,7 @@ export default function Heap() {
 
     const steps = useMemo(() => generateHeapSteps(array), [array]);
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
+    const currentStep = steps[safeStepIndex];
     const challengeQuestions = useMemo(() => generateHeapChallengeQuestions(steps), [steps]);
 
     useEffect(() => {
