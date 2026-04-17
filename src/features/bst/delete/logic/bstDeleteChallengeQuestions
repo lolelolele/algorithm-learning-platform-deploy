@@ -1,0 +1,61 @@
+export function generateBSTDeleteChallengeQuestions(steps) {
+    const questions = [];
+
+    steps.forEach((step, index) => {
+        if (!step.explanation) return;
+
+        // traversal steps = "X < Y — go left." or "X > Y — go right."
+        const traversalMatch = step.explanation.match(
+            /^(\d+) ([<>]) (\d+) — go (left|right)\./
+        );
+        if (traversalMatch) {
+            const target   = Number(traversalMatch[1]);
+            const current  = Number(traversalMatch[3]);
+            const goesLeft = traversalMatch[4] === "left";
+
+            questions.push({
+                stepIndex: index,
+                question: `Searching for ${target} to delete. Current node is ${current}. Which direction?`,
+                options: ["Go left", "Go right"],
+                correctIndex: goesLeft ? 0 : 1,
+                explanation: goesLeft
+                    ? `${target} < ${current} so we go left down the tree.`
+                    : `${target} > ${current} so we go right down the tree.`,
+            });
+            return;
+        }
+
+        // deletion type step = "Found X. It has two children..."
+        const twoChildMatch = step.explanation.match(
+            /^Found (\d+)\. It has two children\./
+        );
+        if (twoChildMatch) {
+            const val = Number(twoChildMatch[1]);
+            questions.push({
+                stepIndex: index,
+                question: `Node ${val} is found and needs to be deleted. What type of node is it?`,
+                options: ["Leaf node", "One child", "Two children"],
+                correctIndex: 2,
+                explanation: `${val} has two children so we replace it with its in-order successor — the smallest value in its right subtree.`,
+            });
+            return;
+        }
+
+        // leaf node deletion
+        const leafMatch = step.explanation.match(
+            /^Found (\d+)\. It is a leaf node/
+        );
+        if (leafMatch) {
+            const val = Number(leafMatch[1]);
+            questions.push({
+                stepIndex: index,
+                question: `Node ${val} is found and needs to be deleted. What type of node is it?`,
+                options: ["Leaf node", "One child", "Two children"],
+                correctIndex: 0,
+                explanation: `${val} is a leaf node — it has no children so it can simply be removed.`,
+            });
+        }
+    });
+
+    return questions;
+}
