@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import WeightedGraphRenderer from "../features/graph-pathfinding/weighted/WeightedGraphRenderer";
 import { defaultGraph, templates } from "../features/graph-pathfinding/weighted/dijkstra/data/graphs";
 import { generateDijkstraSteps } from "../features/graph-pathfinding/weighted/dijkstra/logic/dijkstraSteps";
+import ChallengeMode from "../components/ChallengeMode";
+import { generateDijkstraChallengeQuestions } from "../features/graph-pathfinding/weighted/dijkstra/logic/dijkstraChallengeQuestions";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -37,11 +39,13 @@ export default function Dijkstra() {
     const [stepIndex, setStepIndex] = useState(0);
 
     /* step-by-step execution trace for the current graph and endpoints */
-    const steps = generateDijkstraSteps(graph, startId, endId);
+    const steps = useMemo(() => generateDijkstraSteps(graph, startId, endId), [graph, startId, endId]);
     
     /* prevents out of range access if the steps array shrinks after changing graph */
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
+
+    const challengeQuestions = useMemo(() => generateDijkstraChallengeQuestions(steps), [steps]);
 
     /* Playback controls:
         - isPlaying: whether autoplay is running
@@ -297,12 +301,21 @@ export default function Dijkstra() {
 
             /* GraphRender draws the graph and highlights algorithm state for the current step */
             visualisation={
-                <WeightedGraphRenderer
-                    graph={graph} 
-                    startId={startId}
-                    endId={endId}
-                    step={currentStep}
-                />
+                <ChallengeMode
+                    steps={steps}
+                    currentStepIndex={safeStepIndex}
+                    onStepChange={setStepIndex}
+                    isPlaying={isPlaying}
+                    onPlayingChange={setIsPlaying}
+                    questions={challengeQuestions}
+                >
+                    <WeightedGraphRenderer
+                        graph={graph}
+                        startId={startId}
+                        endId={endId}
+                        step={currentStep}
+                    />
+                </ChallengeMode>
             }
 
             /* showcases internal state (frontier & counters) e*/
