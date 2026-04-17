@@ -2,7 +2,7 @@ export function generateDijkstraChallengeQuestions(steps) {
     const questions = [];
 
     steps.forEach((step, index) => {
-        if (step.phase !== "Visit node") return;
+        if (step.phase !== "select-node") return;
         if (!step.currentNode) return;
         if (!step.pq || step.pq.length === 0) return;
 
