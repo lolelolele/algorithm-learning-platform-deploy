@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import BSTRenderer from "../features/bst/BSTRenderer";
 import { buildBST, buildBSTFromString, flattenTree, presetTrees, defaultValues } from "../features/bst/data/trees";
 import { generateBSTDeleteSteps } from "../features/bst/delete/logic/bstDeleteSteps";
+import ChallengeMode from "../components/ChallengeMode";
+import { generateBSTDeleteChallengeQuestions } from "../features/bst/delete/logic/bstDeleteChallengeQuestions";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -25,9 +27,10 @@ export default function BSTDelete() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [speed, setSpeed] = useState(1);
 
-    const steps = generateBSTDeleteSteps(treeRoot, deleteValue);
+    const steps = useMemo(() => generateBSTDeleteSteps(treeRoot, deleteValue), [treeRoot, deleteValue]);
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
+    const challengeQuestions = useMemo(() => generateBSTDeleteChallengeQuestions(steps), [steps]);
 
     /* get flat list of current node values for the delete selector */
     const treeNodes = flattenTree(treeRoot);
@@ -185,16 +188,19 @@ export default function BSTDelete() {
 
             /* GraphRender draws the graph and highlights algorithm state for the current step */
             visualisation={
-                <BSTRenderer
-                    tree={currentStep.treeSnapshot}
-                    step={{
-                        currentNode: currentStep.currentNode,
-                        visitedNodes: currentStep.visitedNodes,
-                        foundNode: currentStep.foundNode,
-                        deletedNode: currentStep.deletedNode,
-                        highlightNodes: currentStep.highlightNodes ?? [],
-                    }}
-                />
+                <ChallengeMode
+                    steps={steps}
+                    currentStepIndex={safeStepIndex}
+                    onStepChange={setStepIndex}
+                    isPlaying={isPlaying}
+                    onPlayingChange={setIsPlaying}
+                    questions={challengeQuestions}
+                >
+                    <BSTRenderer
+                        tree={currentStep?.treeSnapshot ?? treeRoot}
+                        step={currentStep}
+                    />
+                </ChallengeMode>
             }
 
             /* showcases internal state (frontier & counters) e*/
