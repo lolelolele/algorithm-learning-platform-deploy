@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import BubbleRenderer from "../features/sorting/bubble/BubbleRenderer";
 import { generateBubbleSteps } from "../features/sorting/bubble/logic/bubbleSteps";
@@ -41,10 +41,10 @@ export default function Bubble() {
         applyNewArray(parsed);
     };
 
-    const steps = generateBubbleSteps(array);
+    const steps = useMemo(() =>generateBubbleSteps(array), [array]);
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
-    const challengeQuestions = generateBubbleChallengeQuestions(steps);
+    const challengeQuestions = useMemo(() => generateBubbleChallengeQuestions(steps), [steps]);
 
     useEffect(() => {
         if (!isPlaying) return;

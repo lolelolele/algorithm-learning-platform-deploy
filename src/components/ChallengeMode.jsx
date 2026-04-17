@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function ChallengeMode({
     steps,
@@ -9,31 +9,22 @@ export default function ChallengeMode({
     questions,
     children,
 }) {
-    const [enabled, setEnabled]           = useState(false);
-    const [answered, setAnswered]         = useState(false);
-    const [selectedOption, setSelected]   = useState(null);
+    const [enabled, setEnabled] = useState(false);
+    const [answered, setAnswered] = useState(false);
     const [showFeedback, setShowFeedback] = useState(false);
-    const [correct, setCorrect]           = useState(false);
-    const [score, setScore]               = useState({ correct: 0, total: 0 });
-    const [showSummary, setShowSummary]   = useState(false);
-    const [usedSteps, setUsedSteps]       = useState(new Set());
+    const [correct, setCorrect] = useState(false);
+    const [correctCount, setCorrectCount] = useState(0);
+    const [showSummary, setShowSummary] = useState(false);
+    const usedSteps = useRef(new Set());
 
     // reset when steps change (new array/algorithm run)
     useEffect(() => {
         setAnswered(false);
-        setSelected(null);
         setShowFeedback(false);
-        setScore({ correct: 0, total: 0 });
+        setCorrectCount(0);
         setShowSummary(false);
-        setUsedSteps(new Set());
+        usedSteps.current = new Set();
     }, [steps]);
-
-    // reset answered state when step changes
-    useEffect(() => {
-        setAnswered(false);
-        setSelected(null);
-        setShowFeedback(false);
-    }, [currentStepIndex]);
 
     const currentQuestion = enabled
         ? questions.find(q => q.stepIndex === currentStepIndex)
@@ -47,58 +38,58 @@ export default function ChallengeMode({
         if (enabled && currentQuestion && isPlaying) {
             onPlayingChange(false);
         }
-    }, [currentQuestion, enabled, isPlaying]);
+    }, [currentQuestion, enabled]);
 
     // show summary when last step is reached in challenge mode
     useEffect(() => {
-        if (enabled && isLastStep && score.total > 0) {
+        if (enabled && isLastStep && correctCount > 0) {
             setShowSummary(true);
         }
     }, [isLastStep, enabled]);
 
     function handleAnswer(optionIndex) {
         if (answered) return;
+        if (usedSteps.current.has(currentStepIndex)) return;
 
         const isCorrect = optionIndex === currentQuestion.correctIndex;
-        setSelected(optionIndex);
+        usedSteps.current.add(currentStepIndex);
+
         setAnswered(true);
         setCorrect(isCorrect);
         setShowFeedback(true);
 
-        if (!usedSteps.has(currentStepIndex)) {
-            setScore(s => ({
-                correct: s.correct + (isCorrect ? 1 : 0),
-                total: s.total + 1,
-            }));
-            setUsedSteps(prev => new Set([...prev, currentStepIndex]));
+        if (isCorrect) {
+            setCorrectCount(c => c + 1);
         }
     }
 
     function handleNext() {
         setShowFeedback(false);
         setAnswered(false);
-        setSelected(null);
         onStepChange(i => Math.min(i + 1, steps.length - 1));
+        onPlayingChange(true);
     }
 
     function handleToggle() {
         if (currentStepIndex > 0) return; // can't toggle mid-execution
         setEnabled(e => !e);
-        setScore({ correct: 0, total: 0 });
-        setUsedSteps(new Set());
+        setCorrectCount(0);
+        usedSteps.current = new Set();
         setShowSummary(false);
     }
 
     function handleReset() {
         setShowSummary(false);
-        setScore({ correct: 0, total: 0 });
-        setUsedSteps(new Set());
+        setCorrectCount(0);
+        usedSteps.current = new Set();
+        setAnswered(false);
+        setShowFeedback(false);
         onStepChange(0);
         onPlayingChange(false);
     }
 
-    const percentage = score.total > 0
-        ? Math.round((score.correct / score.total) * 100)
+    const percentage = questions.length > 0
+        ? Math.round((correctCount / questions.length) * 100)
         : 0;
 
     return (
@@ -120,11 +111,11 @@ export default function ChallengeMode({
                 </button>
 
                 {/* score badge */}
-                {enabled && score.total > 0 && (
+                {enabled && (
                     <div className="text-sm font-medium text-gray-600">
                         Score:{" "}
                         <span className={`font-bold ${percentage >= 70 ? "text-green-600" : "text-red-500"}`}>
-                            {score.correct}/{score.total} ({percentage}%)
+                            {correctCount}/{questions.length} ({percentage}%)
                         </span>
                     </div>
                 )}
@@ -138,7 +129,7 @@ export default function ChallengeMode({
                             Challenge Complete!
                         </h3>
                         <p className="text-gray-500 text-sm mb-4">
-                            You answered {score.correct} out of {score.total} questions correctly.
+                            You answered {correctCount} out of {questions.length} questions correctly.
                         </p>
                         <div className={`text-3xl font-bold mb-1 ${percentage >= 70 ? "text-green-600" : "text-red-500"}`}>
                             {percentage}%
