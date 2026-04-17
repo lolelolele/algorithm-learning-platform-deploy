@@ -33,6 +33,7 @@ export default function BFS() {
 
     /* step-by-step execution trace for the current graph and endpoints */
     const steps = generateBFSSteps(graph, startId);
+    console.log("BFS explanations:", steps.map(s => s.explanation));
     
     /* prevents out of range access if the steps array shrinks after changing graph */
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
