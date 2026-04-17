@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import AlgorithmLayout from "../components/AlgorithmLayout";
 import MergeRenderer from "../features/sorting/merge/MergeRenderer";
 import { generateMergeSteps } from "../features/sorting/merge/logic/mergeSteps";
 import { defaultArray, presets } from "../features/sorting/data/arrays";
+import ChallengeMode from "../components/ChallengeMode";
+import { generateMergeChallengeQuestions } from "../features/sorting/merge/logic/mergeChallengeQuestions";
 
 // ui icons for playback controls
 import playIcon from "../assets/icons/play.png";
@@ -43,9 +45,10 @@ export default function Merge() {
         applyNewArray(parsed);
     };
 
-    const steps = generateMergeSteps(array);
+    const steps = useMemo(() => generateMergeSteps(array), [array]);
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
+    const challengeQuestions = useMemo(() => generateMergeChallengeQuestions(steps), [steps]);
 
     useEffect(() => {
         if (!isPlaying) return;
@@ -162,7 +165,16 @@ export default function Merge() {
             }
 
             visualisation={
-                <MergeRenderer step={currentStep} />
+                <ChallengeMode
+                    steps={steps}
+                    currentStepIndex={safeStepIndex}
+                    onStepChange={setStepIndex}
+                    isPlaying={isPlaying}
+                    onPlayingChange={setIsPlaying}
+                    questions={challengeQuestions}
+                >
+                    <MergeRenderer step={currentStep} />
+                </ChallengeMode>
             }
 
             metrics={
