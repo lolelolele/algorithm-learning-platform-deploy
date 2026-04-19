@@ -198,12 +198,26 @@ export default function BSTDelete() {
                         {inputError && (
                             <p className="text-xs text-red-500 mt-1">{inputError}</p>
                         )}
-                        <button
-                            className="mt-2 w-full rounded-md border px-3 py-1 text-sm hover:bg-gray-100"
-                            onClick={handleCustomBuild}
-                        >
-                            Build Tree
-                        </button>
+                        <div className="mt-2 flex gap-2">
+                            <button
+                                className="flex-1 rounded-md border px-3 py-1 text-sm hover:bg-gray-100"
+                                onClick={handleCustomBuild}
+                            >
+                                Build Tree
+                            </button>
+                            <button
+                                className="flex-1 rounded-md border px-3 py-1 text-sm hover:bg-gray-100"
+                                onClick={() => {
+                                    setSelectedPreset("balanced-small");
+                                    setCustomInput("");
+                                    setInputError("");
+                                    const preset = presetTrees.find(p => p.id === "balanced-small");
+                                    if (preset) setTreeRoot(buildBST(preset.values));
+                                }}
+                            >
+                                Reset
+                            </button>
+                        </div>
                     </div>
 
                     {/* delete node picker — shows all values currently in tree */}
