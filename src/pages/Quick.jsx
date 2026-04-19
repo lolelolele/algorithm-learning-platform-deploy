@@ -81,33 +81,38 @@ export default function Quick() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                         <p className="text-gray-600">
-                            Quick Sort picks a pivot element and partitions the array so that
-                            all elements smaller than or equal to the pivot are on the left,
-                            and all larger elements are on the right. The pivot is then in its
-                            final sorted position, and the algorithm recurses on each half.
+                        Quick Sort is a divide-and-conquer algorithm that selects a pivot element
+                        and partitions the array so all elements smaller than or equal to the pivot
+                        are on the left, and all larger elements are on the right. The pivot is then
+                        in its exact final sorted position. This process is applied recursively to
+                        the left and right partitions until the entire array is sorted.
                         </p>
                     </div>
                     <div>
-                        <h3 className="font-medium mb-1">How it works</h3>
+                        <h3 className="font-medium mb-1">How it works (Lomuto Scheme)</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Choose the last element as the pivot.</li>
-                            <li>Partition: elements ≤ pivot go left, elements &gt; pivot go right.</li>
-                            <li>Place the pivot between the two groups — its final position.</li>
-                            <li>Recursively sort the left and right groups.</li>
+                            <li>Select the last element of the current partition as the pivot.</li>
+                            <li>Scan all other elements — move elements ≤ pivot to the left partition, elements &gt; pivot to the right.</li>
+                            <li>Place the pivot between the two groups — this is now its final sorted position.</li>
+                            <li>Recursively apply Quick Sort to the left partition.</li>
+                            <li>Recursively apply Quick Sort to the right partition.</li>
                         </ul>
                     </div>
                     <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>
-                                <span className="font-medium">Time (average):</span> O(n log n) 
-                            </li>
-                            <li>
-                                <span className="font-medium">Time (worst):</span> O(n²) — already sorted
-                            </li>
-                            <li>
-                                <span>Space:</span> O(n) — recursion stack
-                            </li>
+                        <li>
+                            <span className="font-medium">Time — Average case: O(n log n)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">On average, the pivot divides the array into two roughly equal halves, giving log n levels of recursion with n comparisons at each level.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Time — Worst case: O(n²)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">If the pivot is always the smallest or largest element (e.g. an already sorted array), which causes an unbalanced partitions.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Space: O(log n) — recursion stack</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Quick Sort sorts in-place but uses stack space for recursion. On average, the recursion depth is log n. In the worst case it can reach O(n).</p>
+                        </li>
                         </ul>
                     </div>
                 </div>
