@@ -68,16 +68,19 @@ export function generateBFSSteps(graph, startId) {
         });
         
         // record current BFS state for visualisation
+        const isComplete = queue.length === 0;
         steps.push({
             visitedNodes: new Set(visited),
-            currentNode: current,
+            currentNode: isComplete ? null : current,
             queue: [...queue],
             visitedOrder: [...visitedOrder],
             highlightEdges: newHighlightEdges,
-            explanation: queue.length > 0
-                ? `Visiting node ${current}. Exploring its neighbours. Queue: [${queue.join(", ")}]`
-                : `Visiting node ${current}. Queue is now empty – BFS complete.`,
-            whyThisStep: `Node ${current} was dequeued because it was added to the queue first (FIFO). BFS explores nodes layer by layer, guaranteeing the shortest path in an unweighted graph.`,
+            explanation: isComplete
+                ? `Node ${current} visited. Queue is now empty — BFS complete. All reachable nodes have been visited.`
+                : `Visiting node ${current}. Exploring its neighbours. Queue: [${queue.join(", ")}]`,
+            whyThisStep: isComplete
+                ? `BFS is complete. Every reachable node has been visited in level-order (breadth-first). The visited order was: ${visitedOrder.join(" → ")}.`
+                : `Node ${current} is dequeued because it was added to the queue first (FIFO). Its unvisited neighbours are now added to the back of the queue to be explored next.`,
             operationCount,
         });
     }
