@@ -366,22 +366,17 @@ export default function AStar() {
             metrics={
                 <div className="text-sm text-gray-700 space-y-3">
                     <div>
-                        <h3 className="font-medium mb-2">Frontier</h3>
-
-                        {/* displays the current frontier snapshot with the node and its distances */}
+                        <h3 className="font-medium mb-2">Open List</h3>
                         <div className="rounded-md border bg-white p-2 text-gray-700">
-                            {currentStep?.pq?.length
-                                ? currentStep.pq
-                                    .map(
-                                        (item) =>
-                                            `${item.id}(${item.dist === Infinity ? "∞" : item.dist})`
-                                    )
-                                    .join(", ")
+                            {currentStep?.openList?.length > 0
+                                ? currentStep.openList.map(nodeId =>
+                                    `${nodeId}(f:${currentStep.f?.[nodeId] !== undefined && currentStep.f[nodeId] !== Infinity
+                                        ? currentStep.f[nodeId]
+                                        : "∞"})`
+                                  ).join(", ")
                                 : "Empty"}
                         </div>
-                    
                     </div>
-
                     <div>
                         <h3 className="font-medium mb-2">Live Counters</h3>
                         <ul className="space-y-1 text-gray-600">
@@ -398,7 +393,10 @@ export default function AStar() {
                 <div className="text-sm text-gray-700 space-y-3">
                     <div className="text-xs text-gray-500 space-y-1">
                         <div>Phase: {currentStep?.phase ?? "-"}</div>
-                        <div>Frontier: {currentStep?.frontierWithDist ?? "∅"}</div>
+                        <div>Open List: {currentStep?.openList?.length > 0
+                            ? currentStep.openList.join(", ")
+                            : "∅"}
+                        </div>
                     </div>
 
                     {currentStep?.explanationParts ?(
