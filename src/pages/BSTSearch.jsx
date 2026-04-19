@@ -90,9 +90,11 @@ export default function BSTSearch() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                                BST Search finds a value by comparing it to the current node
-                                and moving left or right based on whether the target is smaller
-                                or larger. This eliminates half the tree at each step.
+                                A Binary Search Tree (BST) is a tree where every node satisfies one rule:
+                                all values in the left subtree are smaller than the node, and all values
+                                in the right subtree are larger. BST Search exploits this property to
+                                find a target value efficiently. At each node, the search eliminates
+                                an entire half of the remaining tree.z
                             </p>
                     </div>
 
@@ -100,29 +102,34 @@ export default function BSTSearch() {
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Start at the root.</li>
-                            <li>If target equals current node = found.</li>
-                            <li>If target is smaller = go left.</li>
-                            <li>If target is larger = go right.</li>
-                            <li>Repeat until found or null is reached.</li>
+                            <li>Start at the root node.</li>
+                            <li>Compare the target value with the current node's value.</li>
+                            <li>If they are equal = the value is found.</li>
+                            <li>If the target is smaller = move to the left child (all smaller values are there).</li>
+                            <li>If the target is larger = move to the right child (all larger values are there).</li>
+                            <li>Repeat until the value is found or a null node is reached (value not in tree).</li>
                         </ul>
                     </div>
 
                     <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>
-                                <span className="font-medium">Time:</span> O(h) where h is tree height
-                            </li>
-                            <li>
-                                <span className="font-medium">Best case:</span> O(log n) balanced tree
-                            </li>
-                            <li>
-                                <span className="font-medium">Worst case:</span> O(n) skewed tree
-                            </li>
-                            <li>
-                                <span>Space:</span> O(h)
-                            </li>
+                        <li>
+                            <span className="font-medium">Time: O(h) where h is the tree height</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Each comparison moves one level down the tree. The maximum number of comparisons equals the height of the tree.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Best/Average case: O(log n) — balanced tree</span>
+                            <p className="text-xs text-gray-500 mt-0.5">In a balanced BST, the height is log n. Each comparison eliminates roughly half the remaining nodes, giving logarithmic search time.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Worst case: O(n) — skewed tree</span>
+                            <p className="text-xs text-gray-500 mt-0.5">If nodes are inserted in sorted order, the tree degenerates into a linked list (height = n). Search then requires visiting every node in the worst case.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Space: O(h)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Recursive implementations use O(h) call stack space. The iterative version uses O(1) extra space.</p>
+                        </li>
                         </ul>
                     </div>
                 </div>
