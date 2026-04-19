@@ -206,9 +206,10 @@ export default function Merge() {
                         </div>
                     </div>
                     <div>
-                        <h3 className="font-medium mb-2">Nodes Visible</h3>
-                        <div className="rounded-md border bg-gray-50 p-2 text-gray-700">
-                            {currentStep?.nodes?.length ?? 0}
+                        <h3 className="font-medium mb-2">About the Counters</h3>
+                        <div className="rounded-md border bg-gray-50 p-2 text-gray-500 text-xs leading-relaxed">
+                            <p><span className="font-medium text-gray-700">Comparisons:</span> how many times two elements have been compared to decide their order during a merge.</p>
+                            <p className="mt-1"><span className="font-medium text-gray-700">Merge writes:</span> how many times an element has been written into the merged output array.</p>
                         </div>
                     </div>
                 </div>
