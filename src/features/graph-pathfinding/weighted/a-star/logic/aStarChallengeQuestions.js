@@ -7,21 +7,30 @@ export function generateAStarChallengeQuestions(steps) {
 
         const correct = step.currentNode;
 
-        const prevStep = steps[index - 1];
-        if (!prevStep || !prevStep.openList || prevStep.openList.length < 2) return;
-
-        // deduplicate by node id keeping lowest f score
-        const seen = new Map();
-        for (const item of prevStep.openList) {
-            if (!seen.has(item.id) || item.f < seen.get(item.id).f) {
-                seen.set(item.id, item);
+        // find the previous step that has a non-empty openList
+        let prevStep = null;
+        for (let i = index - 1; i >= 0; i--) {
+            if (steps[i].openList && steps[i].openList.length > 0) {
+                prevStep = steps[i];
+                break;
             }
         }
-        const frontier = [...seen.values()].slice(0, 4);
-        const options = frontier.map(item =>
-            `${item.id} (f: ${item.f !== undefined ? item.f : "?"})`
+
+        if (!prevStep) return;
+
+        const openNodes = prevStep.openList; // array of node id strings
+        if (openNodes.length < 2) return;
+
+        // use f scores from the current step's f object
+        const fScores = step.f ?? {};
+
+        const options = openNodes.slice(0, 4).map(nodeId =>
+            `${nodeId} (f: ${fScores[nodeId] !== undefined && fScores[nodeId] !== Infinity
+                ? fScores[nodeId]
+                : "∞"})`
         );
-        const correctIndex = frontier.findIndex(item => item.id === correct);
+
+        const correctIndex = openNodes.slice(0, 4).indexOf(correct);
         if (correctIndex === -1) return;
 
         questions.push({
