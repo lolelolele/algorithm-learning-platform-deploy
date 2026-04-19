@@ -81,10 +81,11 @@ export default function Heap() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                         <p className="text-gray-600">
-                            Heap Sort transforms the array into a max-heap — a binary tree
-                            where every parent is larger than its children. The root is always
-                            the maximum, so we repeatedly extract it and place it at the end
-                            of the sorted region.
+                        Heap Sort uses a data structure called a max-heap which is a binary tree where
+                        every parent node is greater than or equal to its children. This guarantees
+                        the largest element is always at the root. The algorithm has two phases:
+                        first it builds a max-heap from the input array, then it repeatedly extracts
+                        the maximum element and places it at the end of the sorted region.
                         </p>
                     </div>
                     <div>
@@ -92,24 +93,29 @@ export default function Heap() {
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
                             <li>
                                 <span className="font-medium">Phase 1 — Build max-heap:</span> heapify
-                                every internal node from the bottom up to the root.
+                                every internal node from the bottom up to the root. Heapify ensures a node is larger than both
+                                its children, swapping downward if not.
                             </li>
                             <li>
-                                <span className="font-medium">Phase 2 — Extract:</span> swap root (max)
-                                with last element, shrink heap, sift root down.
+                                <span className="font-medium">Phase 2 — Extract max repeatedly:</span> swap
+                                the root (maximum) with the last heap element, shrink the heap by one,
+                                then re-heapify the root. Each extraction places one element in its
+                                final sorted position.
                             </li>
-                            <li>Repeat Phase 2 until the heap has one element.</li>
+                            <li>Repeat Phase 2 until the heap has only one element remaining.</li>
                         </ul>
                     </div>
                     <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>
-                                <span className="font-medium">Time (all cases):</span> O(n log n)
-                            </li>
-                            <li>
-                                <span className="font-medium">Space:</span> O(1) — in-place
-                            </li>
+                        <li>
+                            <span className="font-medium">Time — All cases: O(n log n)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Building the heap takes O(n). Each of the n extractions requires a heapify operation which takes O(log n) (the height of the tree). Total: O(n log n) in best, average, and worst cases.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Space (in-place): O(1)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Heap Sort sorts directly within the original array using only a constant amount of extra memory, making it more memory-efficient than Merge Sort.</p>
+                        </li>
                         </ul>
                     </div>
                 </div>
