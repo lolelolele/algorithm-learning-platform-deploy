@@ -9,12 +9,12 @@ export default function ChallengeMode({
     questions,
     children,
 }) {
-    const [enabled, setEnabled] = useState(false);
-    const [answered, setAnswered] = useState(false);
+    const [enabled, setEnabled]           = useState(false);
+    const [answered, setAnswered]         = useState(false);
     const [showFeedback, setShowFeedback] = useState(false);
-    const [correct, setCorrect] = useState(false);
+    const [correct, setCorrect]           = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
-    const [showSummary, setShowSummary] = useState(false);
+    const [showSummary, setShowSummary]   = useState(false);
     const [lastQuestion, setLastQuestion] = useState(null);
     const usedSteps = useRef(new Set());
 
@@ -27,6 +27,18 @@ export default function ChallengeMode({
         setLastQuestion(null);
         usedSteps.current = new Set();
     }, [steps]);
+
+    // reset answered/feedback state when step changes
+    // this prevents the crash when stepping backward
+    useEffect(() => {
+        // only clear feedback if the new step has no question
+        // or if we stepped backward
+        const questionForThisStep = questions.find(q => q.stepIndex === currentStepIndex);
+        if (!questionForThisStep) {
+            setAnswered(false);
+            setShowFeedback(false);
+        }
+    }, [currentStepIndex, questions]);
 
     const currentQuestion = enabled
         ? questions.find(q => q.stepIndex === currentStepIndex)
@@ -41,8 +53,7 @@ export default function ChallengeMode({
 
     const isLastStep = currentStepIndex >= steps.length - 1;
 
-    // when challenge mode is on and we hit a question step,
-    // pause autoplay automatically
+    // when challenge mode is on and we hit a question step, pause autoplay
     useEffect(() => {
         if (enabled && currentQuestion && isPlaying) {
             onPlayingChange(false);
@@ -82,7 +93,7 @@ export default function ChallengeMode({
     }
 
     function handleToggle() {
-        if (currentStepIndex > 0) return; // can't toggle mid-execution
+        if (currentStepIndex > 0) return;
         setEnabled(e => !e);
         setCorrectCount(0);
         setAnswered(false);
@@ -128,7 +139,6 @@ export default function ChallengeMode({
                     <span>{enabled ? "Challenge Mode: ON" : "Challenge Mode: OFF"}</span>
                 </button>
 
-                {/* score badge */}
                 {enabled && (
                     <div className="text-sm font-medium text-gray-600">
                         Score:{" "}
@@ -138,7 +148,7 @@ export default function ChallengeMode({
                     </div>
                 )}
             </div>
-            
+
             {/* summary modal */}
             {showSummary && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 rounded-xl">
@@ -169,7 +179,7 @@ export default function ChallengeMode({
                 </div>
             )}
 
-            {/* question prompt: only shown if not yet answered */}
+            {/* question prompt — only show if not yet answered */}
             {enabled && currentQuestion && !answered && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                     <p className="text-sm font-semibold text-amber-800 mb-3">
@@ -189,8 +199,8 @@ export default function ChallengeMode({
                 </div>
             )}
 
-            {/* feedback */}
-            {enabled && showFeedback && answered && (
+            {/* feedback — uses lastQuestion as fallback to prevent null crash */}
+            {enabled && showFeedback && answered && feedbackQuestion && (
                 <div className={`rounded-xl border p-4 ${correct ? "bg-green-50 border-green-200" : "bg-red-50 border-red-200"}`}>
                     <div className="flex items-start justify-between gap-3">
                         <div>
@@ -198,7 +208,7 @@ export default function ChallengeMode({
                                 {correct ? "✓ Correct!" : "✗ Incorrect"}
                             </p>
                             <p className="text-xs text-gray-600 leading-relaxed">
-                                {currentQuestion.explanation}
+                                {feedbackQuestion.explanation}
                             </p>
                         </div>
                         <button
