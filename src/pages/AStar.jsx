@@ -212,7 +212,7 @@ export default function AStar() {
                             onChange={e => handleTemplateChange(e.target.value)}
 
                         >
-                            <option value="custom">Custom (Default)</option>
+                            <option value="custom">Default</option>
 
                             {/* group templates selection */}
                             <optgroup label="Grid">

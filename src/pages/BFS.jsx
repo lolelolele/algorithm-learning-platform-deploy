@@ -154,7 +154,7 @@ export default function BFS() {
                             }}
 
                         >
-                            <option value="custom">Custom (Default)</option>
+                            <option value="custom">Default</option>
 
                             {/* group templates selection */}
                             <optgroup label="Tree">
