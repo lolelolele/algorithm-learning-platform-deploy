@@ -96,8 +96,11 @@ export default function BSTDelete() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                            BST deletion removes a node while maintaining the BST property.
-                            There are three cases depending on how many children the node has.
+                            BST Deletion removes a node from the tree while maintaining the BST
+                            property. It is the most complex BST operation because removing a node
+                            with children requires careful restructuring to preserve the ordering
+                            of all remaining values. There are three distinct cases depending on
+                            how many children the node being deleted has.
                             </p>
                     </div>
 
@@ -112,19 +115,52 @@ export default function BSTDelete() {
                     </div>
 
                     <div>
+                        <h3 className="font-medium mb-1">The Three Cases</h3>
+                        <ul className="list-disc ml-5 space-y-2 text-gray-600">
+                            <li>
+                                <span className="font-medium">Case 1 — Leaf node (no children):</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Simply remove the node. No restructuring needed since removing a leaf cannot affect any other node's position.</p>
+                            </li>
+                            <li>
+                                <span className="font-medium">Case 2 — One child:</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Replace the node with its child.</p>
+                            </li>
+                            <li>
+                                <span className="font-medium">Case 3 — Two children:</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Find the in-order successor which is the smallest value in the right subtree. Replace the deleted node's value with the successor's value, then delete the successor (which has at most one child, reducing to Case 1 or 2).</p>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 className="font-medium mb-1">Why the in-order successor?</h3>
+                        <p className="text-gray-600 text-xs">
+                            The in-order successor is the smallest value greater than the deleted node.
+                            Replacing the deleted node with it preserves the BST property as it is
+                            larger than everything in the left subtree and smaller than everything
+                            else in the right subtree.
+                        </p>
+                    </div>
+
+
+                    <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
                             <li>
-                                <span className="font-medium">Time:</span> O(h) where h is tree height
+                                <span className="font-medium">Time: O(h) where h is the tree height</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Finding the node to delete takes O(h). Finding the in-order successor (Case 3) also takes O(h). Total is O(h).</p>
                             </li>
                             <li>
-                                <span className="font-medium">Best case:</span> O(log n) balanced tree
+                                <span className="font-medium">Best/Average case: O(log n) — balanced tree</span>
+                                <p className="text-xs text-gray-500 mt-0.5">In a balanced BST, height is log n so deletion is logarithmic.</p>
                             </li>
                             <li>
-                                <span className="font-medium">Worst case:</span> O(n) skewed tree
+                                <span className="font-medium">Worst case: O(n) — skewed tree</span>
+                                <p className="text-xs text-gray-500 mt-0.5">A degenerate tree has height n, making deletion linear in the worst case.</p>
                             </li>
                             <li>
-                                <span>Space:</span> O(h)
+                                <span className="font-medium">Space: O(h)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Recursive deletion uses O(h) call stack space.</p>
                             </li>
                         </ul>
                     </div>
