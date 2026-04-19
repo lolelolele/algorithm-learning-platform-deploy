@@ -77,10 +77,11 @@ export default function DFS() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                                DFS explores a graph by going as deep as possible along
-                                each branch before backtracking. It uses a stack (LIFO)
-                                instead of BFS's queue, which means it prioritises depth
-                                over breadth.
+                            Depth-First Search explores a graph by going as deep as possible along
+                            each branch before backtracking. Starting from a source node, it follows
+                            one path all the way to a dead end, then backtracks to explore other
+                            branches. It uses a stack (LIFO) instead of BFS's queue, which means it 
+                            prioritises depth over breadth.
                             </p>
                     </div>
 
@@ -88,23 +89,35 @@ export default function DFS() {
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Push the start node onto a stack and mark it as seen.</li>
-                            <li>Pop the top node and mark it as visited.</li>
+                            <li>Push the start node onto the stack and mark it as seen.</li>
+                            <li>Pop the top node from the stack (LIFO: Last In, First Out) and mark it as visited.</li>
                             <li>Push all unvisited neighbours onto the stack.</li>
                             <li>Repeat until the stack is empty.</li>
-                            <li>If a dead end is reached, backtrack to the last node with unvisited neighbours.</li>
+                            <li>If a dead end is reached (no unvisited neighbours), the algorithm automatically backtracks by popping the next node from the stack.</li>
                         </ul>
+                    </div>
+
+                    <div>
+                        <h3 className="font-medium mb-1">Stack vs Queue</h3>
+                        <p className="text-gray-600 text-xs">
+                            DFS uses a stack (LIFO). The most recently discovered node is always explored
+                            next, causing the algorithm to go deep down one path before exploring others.
+                            Compare with BFS which uses a queue (FIFO) and explores level by level.
+                            DFS does not guarantee the shortest path.
+                        </p>
                     </div>
 
                     <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>
-                                <span className="font-medium">Time:</span> O(V + E)
-                            </li>
-                            <li>
-                                <span>Space:</span> O(V)
-                            </li>
+                        <li>
+                            <span className="font-medium">Time: O(V + E)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Every node (V) is visited exactly once and every edge (E) is examined once. The total work is linear in the size of the graph, the same as BFS.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Space: O(V)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">The stack can contain up to V nodes in the worst case (e.g. a path graph where every node is pushed before any are popped). Recursive DFS uses the call stack which has the same space requirement.</p>
+                        </li>
                         </ul>
                     </div>
                 </div>
