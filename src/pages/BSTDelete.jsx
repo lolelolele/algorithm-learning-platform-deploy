@@ -248,7 +248,11 @@ export default function BSTDelete() {
                     </div>
                     <div>
                         <span className="font-medium">Current Node: </span>
-                        <span className="font-mono">{currentStep.currentNode ?? "—"}</span>
+                        <span className="font-mono">
+                            {currentStep.currentNode
+                                ? currentStep.treeSnapshot?.find(n => n.id === currentStep.currentNode)?.value ?? "—"
+                                : "—"}
+                        </span>
                     </div>
                     <div>
                         <span className="font-medium">Nodes Visited: </span>
