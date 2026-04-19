@@ -89,20 +89,23 @@ export default function Merge() {
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Divide the array at the midpoint.</li>
-                            <li>Recursively sort each half.</li>
-                            <li>Merge the two sorted halves by comparing front elements.</li>
-                            <li>Repeat until the full array is merged back together.</li>
+                            <li>Divide the array in half at the midpoint.</li>
+                            <li>Recursively sort the left half.</li>
+                            <li>Recursively sort the right half.</li>
+                            <li>Merge the two sorted halves by repeatedly taking the smaller front element from each half.</li>
+                            <li>Continue until all elements have been merged back into a single sorted array.</li>
                         </ul>
                     </div>
                     <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
                             <li>
-                                <span className="font-medium">Time (all cases):</span> O(n log n) 
+                                <span className="font-medium">Time (all cases): O(n log n)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">The array is divided log n times (halving each time). At each level, all n elements are processed during the merge step. This gives n × log n operations in every case (best, average, and worst).</p>
                             </li>
                             <li>
-                                <span>Space:</span> O(n)
+                                <span className="font-medium">Space: O(n)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Merge Sort requires additional memory proportional to the input size to store the temporary merged arrays during each merge step. Unlike Bubble or Quick Sort, it is not in-place.</p>
                             </li>
                         </ul>
                     </div>
