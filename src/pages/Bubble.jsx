@@ -142,12 +142,21 @@ export default function Bubble() {
                             className="w-full"
                         />
                     </div>
-                    <button
-                        onClick={regenerate}
-                        className="w-full rounded-md border px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-medium"
-                    >
-                        Generate Array
-                    </button>
+
+                    <div className="flex gap-2">
+                        <button
+                            onClick={regenerate}
+                            className="flex-1 rounded-md border px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-medium text-sm"
+                        >
+                            Generate Array
+                        </button>
+                        <button
+                            onClick={() => applyNewArray(defaultArray)}
+                            className="flex-1 rounded-md border px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-medium text-sm"
+                        >
+                            Reset
+                        </button>
+                    </div>
 
                     <div className="border-t pt-3">
                         <label className="block font-medium mb-1">Custom Input:</label>
