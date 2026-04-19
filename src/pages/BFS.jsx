@@ -77,9 +77,11 @@ export default function BFS() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                                BFS explores a graph level by level, starting from a source node.
-                                It visits all immediate neighbours before moving to the next layer,
-                                guaranteeing the shortest path in an unweighted graph.
+                            Breadth-First Search explores a graph level by level, starting from
+                            a source node. It visits all nodes at level 1 first, then all nodes
+                            at level 2, and so on. This layer-by-layer approach guarantees that
+                            BFS finds the shortest path (in terms of number of edges) in an
+                            unweighted graph.
                             </p>
                     </div>
 
@@ -95,13 +97,24 @@ export default function BFS() {
                     </div>
 
                     <div>
+                        <h3 className="font-medium mb-1">Queue vs Stack</h3>
+                        <p className="text-gray-600 text-xs">
+                            BFS uses a queue (FIFO). This is what creates the level-by-level behaviour. The
+                            nodes discovered earlier are processed first. Compare with DFS which uses a
+                            stack (LIFO) and dives deep along one branch before exploring others.
+                        </p>
+                    </div>
+
+                    <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>
-                                <span className="font-medium">Time:</span> O(V + E)
+                        <li>
+                                <span className="font-medium">Time: O(V + E)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Every node (V) is enqueued and dequeued exactly once. Every edge (E) is examined once to check if the neighbour has been visited. Total work is proportional to the size of the graph.</p>
                             </li>
                             <li>
-                                <span>Space:</span> O(V)
+                                <span className="font-medium">Space: O(V)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">In the worst case the queue holds all nodes at the widest level of the graph. For a complete graph this could be O(V) nodes simultaneously in the queue.</p>
                             </li>
                         </ul>
                     </div>
