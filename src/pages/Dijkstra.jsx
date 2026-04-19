@@ -150,8 +150,11 @@ export default function Dijkstra() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                                Dijkstra's algorithm is a greedy algorithm that is used to find the shortest distance from
-                                the starting node to the end node in a weighted graph with edge weights. 
+                            Dijkstra's algorithm finds the shortest path between a start node and
+                            all other nodes in a weighted graph where all edge weights are non-negative.
+                            It works greedily which mean at each step it selects the unvisited node with the
+                            smallest known distance, guaranteeing that once a node is visited its
+                            shortest distance is finalised and will never be improved upon.
                             </p>
                     </div>
 
@@ -159,12 +162,13 @@ export default function Dijkstra() {
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Initialise all node distances to infinity, except the start node (0).</li>
-                            <li>Maintain a priority queue of frontier nodes.</li>
-                            <li>Repeatedly select the node with the smallest tentative distance.</li>
-                            <li>Relax outgoing edges by checking if a shorter path exists.</li>
-                            <li>Mark nodes as visited once their shortest distance is known.</li>
-                            <li>Continue until all reachable nodes are processed or the target is reached.</li>
+                            <li>Assign distance 0 to the start node and infinity (∞) to all others.</li>
+                            <li>Add the start node to the priority queue (frontier).</li>
+                            <li>Repeatedly select the node with the smallest tentative distance from the frontier.</li>
+                            <li>For each of its neighbours, check if travelling through the current node gives a shorter path — this is called edge relaxation.</li>
+                            <li>If a shorter path is found, update the neighbour's distance and add it to the frontier.</li>
+                            <li>Mark the current node as visited — its shortest distance is now permanently known.</li>
+                            <li>Repeat until the target node is visited or the frontier is empty.</li>
                         </ul>
                     </div>
 
@@ -172,10 +176,12 @@ export default function Dijkstra() {
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
                             <li>
-                                <span className="font-medium">Time:</span> O((V + E) log V) 
+                                <span className="font-medium">Time: O((V + E) log V)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Each of the V nodes is extracted from the priority queue once (O(log V) per extraction). Each of the E edges is relaxed once (O(log V) per relaxation to update the queue). Total: O((V + E) log V).</p>
                             </li>
                             <li>
-                                <span>Space:</span> O(V + E)
+                                <span className="font-medium">Space: O(V + E)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">The algorithm stores the graph (V nodes + E edges), the distance array (V entries), and the priority queue (up to V entries). For dense graphs this can be significant.</p>
                             </li>
                         </ul>
                     </div>
