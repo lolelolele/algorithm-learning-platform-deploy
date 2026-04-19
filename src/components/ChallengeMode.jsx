@@ -15,6 +15,7 @@ export default function ChallengeMode({
     const [correct, setCorrect] = useState(false);
     const [correctCount, setCorrectCount] = useState(0);
     const [showSummary, setShowSummary] = useState(false);
+    const [lastQuestion, setLastQuestion] = useState(null);
     const usedSteps = useRef(new Set());
 
     // reset when steps change (new array/algorithm run)
@@ -23,12 +24,20 @@ export default function ChallengeMode({
         setShowFeedback(false);
         setCorrectCount(0);
         setShowSummary(false);
+        setLastQuestion(null);
         usedSteps.current = new Set();
     }, [steps]);
 
     const currentQuestion = enabled
         ? questions.find(q => q.stepIndex === currentStepIndex)
         : null;
+
+    // store last question so feedback panel always has something to reference
+    useEffect(() => {
+        if (currentQuestion) {
+            setLastQuestion(currentQuestion);
+        }
+    }, [currentQuestion]);
 
     const isLastStep = currentStepIndex >= steps.length - 1;
 
@@ -49,6 +58,7 @@ export default function ChallengeMode({
 
     function handleAnswer(optionIndex) {
         if (answered) return;
+        if (!currentQuestion) return;
         if (usedSteps.current.has(currentStepIndex)) return;
 
         const isCorrect = optionIndex === currentQuestion.correctIndex;
@@ -57,6 +67,7 @@ export default function ChallengeMode({
         setAnswered(true);
         setCorrect(isCorrect);
         setShowFeedback(true);
+        setLastQuestion(currentQuestion);
 
         if (isCorrect) {
             setCorrectCount(c => c + 1);
@@ -74,6 +85,9 @@ export default function ChallengeMode({
         if (currentStepIndex > 0) return; // can't toggle mid-execution
         setEnabled(e => !e);
         setCorrectCount(0);
+        setAnswered(false);
+        setShowFeedback(false);
+        setLastQuestion(null);
         usedSteps.current = new Set();
         setShowSummary(false);
     }
@@ -84,6 +98,7 @@ export default function ChallengeMode({
         usedSteps.current = new Set();
         setAnswered(false);
         setShowFeedback(false);
+        setLastQuestion(null);
         onStepChange(0);
         onPlayingChange(false);
     }
@@ -91,6 +106,9 @@ export default function ChallengeMode({
     const percentage = questions.length > 0
         ? Math.round((correctCount / questions.length) * 100)
         : 0;
+
+    // use lastQuestion as fallback so feedback never references null
+    const feedbackQuestion = lastQuestion;
 
     return (
         <div className="flex flex-col h-full gap-3">
@@ -151,7 +169,7 @@ export default function ChallengeMode({
                 </div>
             )}
 
-            {/* question prompt */}
+            {/* question prompt: only shown if not yet answered */}
             {enabled && currentQuestion && !answered && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                     <p className="text-sm font-semibold text-amber-800 mb-3">
