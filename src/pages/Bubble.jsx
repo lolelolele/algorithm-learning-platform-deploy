@@ -78,30 +78,37 @@ export default function Bubble() {
                         <h3 className="font-medium mb-1">Description</h3>
                         <p className="text-gray-600">
                             Bubble Sort repeatedly steps through the array, comparing adjacent
-                            elements and swapping them if they are in the wrong order. The largest
-                            unsorted element bubbles up to its correct position after each pass.
+                            elements and swapping them if they are in the wrong order. After each full pass, the largest
+                            unsorted element has "bubbled up" to its correct position at the end.
+                            This continues until no swaps occur in a full pass, meaning the array
+                            is sorted.
                         </p>
                     </div>
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Compare each adjacent pair from left to right.</li>
-                            <li>Swap them if the left element is larger.</li>
-                            <li>After each pass, the largest unsorted element is in its final position.</li>
-                            <li>Repeat for n−1 passes (early exit if no swap occurs).</li>
+                        <li>Start at the beginning of the array.</li>
+                <li>Compare each adjacent pair of elements from left to right.</li>
+                <li>If the left element is larger than the right, swap them.</li>
+                <li>After one full pass, the largest element is guaranteed to be in its correct final position.</li>
+                <li>Repeat for the remaining unsorted portion.</li>
+                <li>If a full pass completes with no swaps, the array is sorted, meaning that algorithm exits early.</li>
                         </ul>
                     </div>
                     <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
                             <li>
-                                <span className="font-medium">Time (worst/avg case):</span> O(n²) 
+                                <span className="font-medium">Time — Worst/Average case: O(n²)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Every element must be compared with every other element. With n elements, this means roughly n × n comparisons in the worst case (e.g. a reversed array).</p>
                             </li>
                             <li>
-                                <span>Time (best case):</span> O(n) : already sorted
+                                <span className="font-medium">Time — Best case: O(n)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">If the array is already sorted, one pass confirms no swaps are needed and the algorithm exits early after just n comparisons.</p>
                             </li>
                             <li>
-                                <span>Space:</span> O(1) — in-place
+                                <span className="font-medium">Space: O(1)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">The amount of space needed for Bubble Sort does not grow with the size of the input array, meaning that it uses constant space regardless of the input size.</p>
                             </li>
                         </ul>
                     </div>
