@@ -53,8 +53,8 @@ export function generateHeapChallengeQuestions(steps) {
                 stepIndex: index,
                 question: `Parent is ${parentVal} (index ${parentIndex}), child is ${childVal} (index ${childIndex}). Should they be swapped to maintain the max-heap property?`,
                 options: [
-                    `Yes — swap ${parentVal} and ${childVal}`,
-                    `No — ${parentVal} is already the larger value`,
+                    `Yes! swap ${parentVal} and ${childVal}`,
+                    `No! ${parentVal} is already the larger value`,
                 ],
                 correctIndex: swapNeeded ? 0 : 1,
                 explanation: swapNeeded
