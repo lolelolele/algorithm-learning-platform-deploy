@@ -211,13 +211,16 @@ export default function Quick() {
                     <div>
                         <h3 className="font-medium mb-2">Current Phase</h3>
                         <div className="rounded-md border bg-gray-50 p-2 text-gray-700">
-                            {currentStep?.phase ?? "—"}
+                            {currentStep?.phase?.startsWith("Scan j=")
+                                ? `Scanning element at index ${currentStep.phase.replace("Scan j=", "")}`
+                                : currentStep?.phase ?? "—"}
                         </div>
                     </div>
                     <div>
-                        <h3 className="font-medium mb-2">Nodes Visible</h3>
-                        <div className="rounded-md border bg-gray-50 p-2 text-gray-700">
-                            {currentStep?.nodes?.length ?? 0}
+                    <h3 className="font-medium mb-2">About the Counters</h3>
+                        <div className="rounded-md border bg-gray-50 p-2 text-gray-500 text-xs leading-relaxed">
+                            <p><span className="font-medium text-gray-700">Comparisons:</span> how many times an element has been compared against the pivot to decide which partition it belongs to.</p>
+                            <p className="mt-1"><span className="font-medium text-gray-700">Partitions:</span> how many times a pivot has been placed into its final sorted position.</p>
                         </div>
                     </div>
                 </div>
