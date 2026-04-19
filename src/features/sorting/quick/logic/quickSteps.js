@@ -14,11 +14,11 @@ export function generateQuickSteps(inputArray) {
         activeRange: [0, n - 1],
         sortedIndices: new Set(sortedIndices),
         swapped: null,
-        explanation: "Starting Quick Sort. We will select a pivot, partition the array around it, then recursively sort each side.",
+        explanation: "Starting Quick Sort. We will select a pivot element and partition the array around it, then recursively sort each side.",
         explanationParts: {
-            rule: "Quick Sort selects a pivot and partitions the array so all smaller elements are left and all larger are right.",
-            reason: "The pivot ends up in its exact final sorted position after each partition.",
-            effect: "The last element of the full array will be selected as the first pivot.",
+            rule: "Quick Sort works by choosing a pivot and rearranging the array so smaller elements are on the left and larger elements are on the right.",
+            reason: "After partitioning, the pivot is guaranteed to be in its correct final position, everything to its left is smaller and everything to its right is larger.",
+            effect: "The last element of the array will be selected as the first pivot.",
         },
         counters: { comparisons, swaps },
         phase: "Start",
@@ -36,11 +36,11 @@ export function generateQuickSteps(inputArray) {
                     activeRange: [low, high],
                     sortedIndices: new Set(sortedIndices),
                     swapped: null,
-                    explanation: `Single element ${arr[low]} at index ${low} — already in its final sorted position.`,
+                    explanation: `Only one element (${arr[low]}) remains in this partition, it is already sorted.`,
                     explanationParts: {
-                        rule: "A single element is always sorted — base case reached.",
-                        reason: `Only one element remains in this partition.`,
-                        effect: `${arr[low]} is locked at index ${low}.`,
+                        rule: "A single element is always in sorted order, this is the base case.",
+                        reason: `There is nothing to compare ${arr[low]} against, so no action is needed.`,
+                        effect: `${arr[low]} is now locked in its final position.`,
                     },
                     counters: { comparisons, swaps },
                     phase: "Base case",
@@ -59,11 +59,11 @@ export function generateQuickSteps(inputArray) {
             activeRange: [low, high],
             sortedIndices: new Set(sortedIndices),
             swapped: null,
-            explanation: `Partitioning indices ${low}–${high}. Pivot selected: ${pivotValue} (index ${high}).`,
+            explanation: `Pivot selected: ${pivotValue} (the last element of the current partition, indices ${low}–${high}).`,
             explanationParts: {
-                rule: "Lomuto scheme: pick the last element of the current range as pivot.",
-                reason: `arr[${high}] = ${pivotValue} is the last element in range [${low}–${high}].`,
-                effect: `Elements ≤ ${pivotValue} will move left, elements > ${pivotValue} will move right.`,
+                rule: "We always pick the last element of the current range as the pivot.",
+                reason: `The current partition covers indices ${low} to ${high}. The last element is ${pivotValue}.`,
+                effect: `Every element will be compared to ${pivotValue}. Elements smaller or equal go left, elements larger go right.`,
             },
             counters: { comparisons, swaps },
             phase: "Select pivot",
@@ -86,19 +86,19 @@ export function generateQuickSteps(inputArray) {
                 sortedIndices: new Set(sortedIndices),
                 swapped: null,
                 explanation: isSmaller
-                    ? `${arr[j]} ≤ pivot (${pivotValue}): moves into the left (≤) partition.`
-                    : `${arr[j]} > pivot (${pivotValue}): stays in the right (>) partition.`,
+                    ? `${arr[j]} ≤ ${pivotValue} (pivot) —> this element belongs in the left group.`
+                    : `${arr[j]} > ${pivotValue} (pivot) —> this element belongs in the right group.`,
                 explanationParts: {
-                    rule: "Compare each element with the pivot.",
+                    rule: "Compare the current element to the pivot to decide which side it belongs on.",
                     reason: isSmaller
-                        ? `${arr[j]} ≤ ${pivotValue} so it belongs on the left.`
-                        : `${arr[j]} > ${pivotValue} so it belongs on the right.`,
+                        ? `${arr[j]} is less than or equal to the pivot (${pivotValue}), so it goes to the left partition.`
+                        : `${arr[j]} is greater than the pivot (${pivotValue}), so it goes to the right partition.`,
                     effect: isSmaller
-                        ? `Increment boundary and swap ${arr[j]} into the left partition.`
-                        : `No swap — ${arr[j]} stays where it is.`,
+                        ? `${arr[j]} will be swapped into the left partition area.`
+                        : `${arr[j]} stays in place, it is already on the correct side.`,
                 },
                 counters: { comparisons, swaps },
-                phase: `Scan j=${j}`,
+                phase: `Comparing element ${arr[j]} to pivot`,
             });
 
             if (isSmaller) {
@@ -116,14 +116,14 @@ export function generateQuickSteps(inputArray) {
                         activeRange: [low, high],
                         sortedIndices: new Set(sortedIndices),
                         swapped: [i, j],
-                        explanation: `Swapped ${arr[j]} and ${arr[i]}: ${arr[i]} is now in the left partition at index ${i}.`,
+                        explanation: `Swapped ${arr[j]} and ${arr[i]} to move ${arr[i]} into the left partition.`,
                         explanationParts: {
-                            rule: "Swap the element into the growing left partition.",
-                            reason: `${arr[i]} ≤ ${pivotValue} so it must be on the left side.`,
-                            effect: `Left partition boundary is now at index ${i}.`,
+                            rule: "When an element belongs on the left, swap it into the left partition area.",
+                            reason: `${arr[i]} ≤ ${pivotValue} so it must be to the left of the pivot.`,
+                            effect: `${arr[i]} is now in the left partition. The left partition boundary moves one step right.`,
                         },
                         counters: { comparisons, swaps },
-                        phase: `Swap [${i}] ↔ [${j}]`,
+                        phase: `Swap into left partition`,
                     });
                 }
             } else {
@@ -148,14 +148,14 @@ export function generateQuickSteps(inputArray) {
             activeRange: [low, high],
             sortedIndices: new Set(sortedIndices),
             swapped: pivotFinalIndex !== high ? [pivotFinalIndex, high] : null,
-            explanation: `Pivot ${pivotValue} placed at index ${pivotFinalIndex} — its final sorted position.`,
+            explanation: `Pivot ${pivotValue} is placed at index ${pivotFinalIndex} — this is its final sorted position.`,
             explanationParts: {
-                rule: "Place the pivot at i+1 — all elements to its left are ≤ pivot, all to its right are > pivot.",
-                reason: `After scanning, the boundary i = ${i}, so pivot belongs at index ${pivotFinalIndex}.`,
-                effect: `${pivotValue} is locked. Recursively sort [${low}–${pivotFinalIndex - 1}] and [${pivotFinalIndex + 1}–${high}].`,
+                rule: "After scanning all elements, the pivot is placed between the left and right groups.",
+                reason: `All elements to the left of index ${pivotFinalIndex} are ≤ ${pivotValue} and all to the right are > ${pivotValue}.`,
+                effect: `${pivotValue} is now permanently sorted. Quick Sort will now recursively sort the left group and the right group independently.`,
             },
             counters: { comparisons, swaps },
-            phase: `Pivot placed at ${pivotFinalIndex}`,
+            phase: `Pivot ${pivotValue} placed`,
         });
 
         quickSort(low, pivotFinalIndex - 1);
@@ -174,9 +174,9 @@ export function generateQuickSteps(inputArray) {
         swapped: null,
         explanation: "Quick Sort complete! All elements are in their final sorted positions.",
         explanationParts: {
-            rule: "When all partitions are size 0 or 1, every element is in its correct position.",
+            rule: "When every partition has been reduced to a single element or is empty, the array is fully sorted.",
             reason: `Completed with ${comparisons} comparisons and ${swaps} swaps.`,
-            effect: "The array is fully sorted in ascending order.",
+            effect: "The array is sorted in ascending order.",
         },
         counters: { comparisons, swaps },
         phase: "Complete",
