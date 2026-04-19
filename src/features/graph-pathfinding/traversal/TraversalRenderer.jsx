@@ -1,143 +1,93 @@
 export default function GraphRenderer({ graph, step }) {
     const { nodes, edges } = graph;
 
-    //sets used for quick lookup of node states
-    const visitedSet = new Set(step?.visited ?? []);
+    const visitedSet      = new Set(step?.visited ?? []);
     const queueOrStackSet = new Set(step?.frontier ?? []);
-
-    /* step highlighting:
-        - currentnode: node currently being processed
-        - highlightEdges: edges being explored from the current node
-    */
-    const currentNode = step?.currentNode ?? null;
+    const currentNode     = step?.currentNode ?? null;
     const highlightEdgeSet = new Set(step?.highlightEdges ?? []);
 
     return (
-        /* SVG used for scalable and consistent rendering */
-        <svg
-            width="100%"
-            height="100%"
-            viewBox="-50 0 900 380"
-            className="bg-white"
-        >
-            {/* legend inside SVG using foreignObject*/}
-            <foreignObject x="-50" y="-160" width="150" height="170">
-                <div className="rounded-md border bg-white/90 p-2 text-xs text-gray-700">
-                    <div className="font-semibold mb-2">Legend:</div>
-                    
-                    {/*legend colours match node/edge styling rules from visualisation */}
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                            <span className="inline-block h-3 w-3 rounded-full border"
-                                style={{ background: "#dcfce7", borderColor: "#16a34a" }} />
-                            <span>Start</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="inline-block h-3 w-3 rounded-full border"
-                                style={{ background: "#fef9c3", borderColor: "#000000" }} />
-                            <span>Current</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="inline-block h-3 w-3 rounded-full border"
-                                style={{ background: "#e5e7eb", borderColor: "#374151" }} />
-                            <span>Visited</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="inline-block h-3 w-3 rounded-full border"
-                                style={{ background: "#dbeafe", borderColor: "#374151" }} />
-                            <span>In Queue / Stack</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="inline-block h-3 w-3 rounded-full border"
-                                style={{ background: "#ffffff", borderColor: "#111827" }} />
-                            <span>Unvisited</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <span className="inline-block h-2 w-6 rounded"
-                                style={{ background: "#f97316" }} />
-                            <span>Explored Edge</span>
-                        </div>
-                    </div>
-                </div>
-            </foreignObject>
+        <div className="flex flex-col h-full gap-2">
+            <svg
+                width="100%"
+                height="100%"
+                viewBox="-50 0 900 380"
+                className="bg-white flex-1"
+            >
+                {/* Edges */}
+                {edges.map((edge) => {
+                    const from = nodes.find((n) => n.id === edge.from);
+                    const to   = nodes.find((n) => n.id === edge.to);
+                    if (!from || !to) return null;
 
-            {/* Edges */}
-            {edges.map((edge) => {
-                const from = nodes.find((n) => n.id === edge.from);
-                const to = nodes.find((n) => n.id === edge.to);
+                    const isHighlighted = highlightEdgeSet.has(edge.id);
 
-                /* skips invalid edge if node ids dont exist*/
-                if (!from || !to) return null;
-
-                const isHighlighted = highlightEdgeSet.has(edge.id);
-
-                return (
-                    <line
-                        key={edge.id}
-                        x1={from.x}
-                        y1={from.y}
-                        x2={to.x}
-                        y2={to.y}
-                        /* highlighted edges represent currently explored connections */
-                        stroke={isHighlighted ? "#f97316" : "#9ca3af"}
-                        strokeWidth={isHighlighted ? 5 : 3}
-                    />
-                );
-            })}
-
-            {/* Nodes */}
-            {nodes.map((node) => {
-                const isStart = node.id === (step?.startId ?? null);
-                const isCurrent = node.id === currentNode;
-                const isVisited = visitedSet.has(node.id);
-                const isInQueue = queueOrStackSet.has(node.id);
-
-                /* default node style*/
-                let fill = "#ffffff";
-                let stroke = "#111827";
-                let strokeWidth = 2;
-
-                /* visual priority: current > start > visited > in queue > unvisited */
-                if (isCurrent) {
-                    fill = "#fef9c3";
-                    stroke = "#000000";
-                    strokeWidth = 5;
-                } else if (isStart) {
-                    fill = "#dcfce7";
-                    stroke = "#16a34a";
-                    strokeWidth = 3;
-                } else if (isVisited) {
-                    fill = "#e5e7eb";
-                    stroke = "#374151";
-                } else if (isInQueue) {
-                    fill = "#dbeafe";
-                    stroke = "#374151";
-                }
-
-                return (
-                    <g key={node.id}>
-                        <circle
-                            cx={node.x}
-                            cy={node.y}
-                            r="24"
-                            fill={fill}
-                            stroke={stroke}
-                            strokeWidth={strokeWidth}
+                    return (
+                        <line
+                            key={edge.id}
+                            x1={from.x} y1={from.y}
+                            x2={to.x}   y2={to.y}
+                            stroke={isHighlighted ? "#f97316" : "#9ca3af"}
+                            strokeWidth={isHighlighted ? 5 : 3}
                         />
-                        {/*node label*/}
-                        <text
-                            x={node.x}
-                            y={node.y + 5}
-                            fontSize="14"
-                            fontWeight="bold"
-                            textAnchor="middle"
-                            fill="#111827"
-                        >
-                            {node.id}
-                        </text>
-                    </g>
-                );
-            })}
-        </svg>
+                    );
+                })}
+
+                {/* Nodes */}
+                {nodes.map((node) => {
+                    const isStart   = node.id === (step?.startId ?? null);
+                    const isCurrent = node.id === currentNode;
+                    const isVisited = visitedSet.has(node.id);
+                    const isInQueue = queueOrStackSet.has(node.id);
+
+                    let fill = "#ffffff";
+                    let stroke = "#111827";
+                    let strokeWidth = 2;
+
+                    if (isCurrent)       { fill = "#fef9c3"; stroke = "#000000"; strokeWidth = 5; }
+                    else if (isStart)    { fill = "#dcfce7"; stroke = "#16a34a"; strokeWidth = 3; }
+                    else if (isVisited)  { fill = "#e5e7eb"; stroke = "#374151"; }
+                    else if (isInQueue)  { fill = "#dbeafe"; stroke = "#374151"; }
+
+                    return (
+                        <g key={node.id}>
+                            <circle
+                                cx={node.x} cy={node.y} r="24"
+                                fill={fill} stroke={stroke} strokeWidth={strokeWidth}
+                            />
+                            <text
+                                x={node.x} y={node.y + 5}
+                                fontSize="14" fontWeight="bold"
+                                textAnchor="middle" fill="#111827"
+                            >
+                                {node.id}
+                            </text>
+                        </g>
+                    );
+                })}
+            </svg>
+
+            {/* legend row below graph */}
+            <div className="flex flex-wrap gap-3 text-xs text-gray-600 justify-center pb-1">
+                <LegendItem colour="#dcfce7" border="#16a34a" label="Start" />
+                <LegendItem colour="#fef9c3" border="#000000" label="Current" />
+                <LegendItem colour="#e5e7eb" border="#374151" label="Visited" />
+                <LegendItem colour="#dbeafe" border="#374151" label="In Queue / Stack" />
+                <LegendItem colour="#ffffff" border="#111827" label="Unvisited" />
+                <LegendItem colour="#f97316" border="#f97316" label="Explored Edge" isEdge />
+            </div>
+        </div>
+    );
+}
+
+function LegendItem({ colour, border, label, isEdge }) {
+    return (
+        <div className="flex items-center gap-1">
+            {isEdge
+                ? <div className="w-5 h-2 rounded flex-shrink-0" style={{ backgroundColor: colour }} />
+                : <div className="w-3 h-3 rounded-full flex-shrink-0" style={{ backgroundColor: colour, border: `2px solid ${border}` }} />
+            }
+            <span>{label}</span>
+        </div>
     );
 }
