@@ -139,6 +139,18 @@ export default function Dijkstra() {
         setIsPlaying(false);
     }
 
+    function resetWeights() {
+        setWeightEdits({});
+        setWeightError("");
+        const source = selectedTemplateId === "custom"
+            ? defaultGraph
+            : templates.find(t => t.id === selectedTemplateId) ?? defaultGraph;
+        const g = cloneGraph(source);
+        setGraph(g);
+        setStepIndex(0);
+        setIsPlaying(false);
+    }
+
     return (
         <AlgorithmLayout
             title="Dijkstra's Shortest Path Algorithm"
@@ -295,13 +307,22 @@ export default function Dijkstra() {
                         {weightError && (
                             <p className="text-red-500 text-xs mt-1">{weightError}</p>
                         )}
-                        <button
-                            onClick={applyWeights}
-                            className="mt-2 w-full rounded-md border px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-medium"
-                        >
-                            Apply Weights
-                        </button>
-                    </div>
+
+                        <div className="mt-2 flex gap-2">
+                            <button
+                                onClick={applyWeights}
+                                className="flex-1 rounded-md border px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-medium text-sm"
+                            >
+                                Apply Weights
+                            </button>
+                            <button
+                                onClick={resetWeights}
+                                className="flex-1 rounded-md border px-3 py-1.5 bg-gray-50 hover:bg-gray-100 font-medium text-sm"
+                            >
+                                Reset
+                            </button>
+                        </div>
+                    </div> 
                 </div>
             }
 
