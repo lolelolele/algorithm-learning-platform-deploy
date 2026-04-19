@@ -107,8 +107,9 @@ export default function Bubble() {
                                 <p className="text-xs text-gray-500 mt-0.5">If the array is already sorted, one pass confirms no swaps are needed and the algorithm exits early after just n comparisons.</p>
                             </li>
                             <li>
-                                <span className="font-medium">Space: O(1)</span>
+                                <span className="font-medium">Space (in-place): O(1) </span>
                                 <p className="text-xs text-gray-500 mt-0.5">The amount of space needed for Bubble Sort does not grow with the size of the input array, meaning that it uses constant space regardless of the input size.</p>
+                                <p className="text-xs text-gray-500 mt-0.5">In-place means that the algorithm sorts the data within the array without requiring additional memory</p>
                             </li>
                         </ul>
                     </div>
