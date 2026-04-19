@@ -150,34 +150,48 @@ export default function AStar() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                                A* is an informed search algorithm that finds the shortest
-                                path by combining the actual cost from the start (g) with
-                                an estimated cost to the goal (h). This heuristic guides
-                                the search toward the goal, making it faster than Dijkstra
-                                in most cases.
+                                A* is an informed search algorithm that finds the shortest path from
+                                a start node to a goal node. Unlike Dijkstra which explores in all
+                                directions equally, A* uses a heuristic estimate h(n) of the remaining
+                                distance to the goal to guide the search toward the target. This makes it
+                                significantly faster in practice while still guaranteeing the optimal path,
+                                provided the heuristic never overestimates the true cost.
                             </p>
+                    </div>
+
+                    <div>
+                        <h3 className="font-medium mb-1">The f(n) = g(n) + h(n) formula</h3>
+                        <ul className="list-disc ml-5 space-y-1 text-gray-600">
+                            <li><span className="font-medium">g(n)</span>: the actual cost of the path from the start node to node n.</li>
+                            <li><span className="font-medium">h(n)</span>: the heuristic estimate of the cost from n to the goal. In this visualisation, h(n) values are pre-assigned to each node.</li>
+                            <li><span className="font-medium">f(n) = g(n) + h(n)</span>:the total estimated cost of the cheapest path through n. A* always expands the node with the lowest f score.</li>
+                        </ul>
                     </div>
 
                     {/* steps on how a-star works */}
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Assign f(n) = g(n) + h(n) to each node.</li>
-                            <li>g(n) is the actual cost from start to n.</li>
-                            <li>h(n) is the estimated cost from n to goal.</li>
-                            <li>Always expand the node with the lowest f score.</li>
-                            <li>Stop when the goal is reached or open list is empty.</li>
+                            <li>Initialise with the start node in the open list with f = h(start).</li>
+                            <li>Select the node with the lowest f score from the open list.</li>
+                            <li>If it is the goal, the shortest path has been found.</li>
+                            <li>Otherwise, expand its neighbours: calculate g and f scores.</li>
+                            <li>Add or update neighbours in the open list if a better path is found.</li>
+                            <li>Move the current node to the closed list (visited).</li>
+                            <li>Repeat until the goal is reached or the open list is empty.</li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 className="font-medium mb-1">Complexity</h3>
+                    <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
                             <li>
-                                <span className="font-medium">Time:</span> O((V + E) log V) 
+                                <span className="font-medium">Time: O((V + E) log V)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Similar to Dijkstra in the worst case. With a good heuristic, A* explores far fewer nodes in practice, potentially much faster than Dijkstra on large graphs.</p>
                             </li>
                             <li>
-                                <span>Space:</span> O(V)
+                                <span className="font-medium">Space: O(V)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">The open and closed lists can contain up to V nodes each. A*'s main drawback is memory usage as it must keep all generated nodes in memory.</p>
                             </li>
                         </ul>
                     </div>
