@@ -87,9 +87,11 @@ export default function BSTInsert() {
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                                BST insertion finds the correct position for a new value
-                                by traversing the tree using the same logic as search,
-                                then places the new node at the empty position found.
+                            BST Insertion adds a new value to the tree while preserving the BST property, meaning that
+                            every left subtree contains only smaller values and every right subtree
+                            contains only larger values. The algorithm searches for the correct position
+                            in exactly the same way as BST Search, then attaches the new node as a
+                            leaf at that position.
                             </p>
                     </div>
 
@@ -97,29 +99,34 @@ export default function BSTInsert() {
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Start at the root.</li>
-                            <li>If value is smaller = go left.</li>
-                            <li>If value is larger = go right.</li>
-                            <li>When a null position is reached = insert here.</li>
-                            <li>Duplicates are rejected</li>
+                            <li>Start at the root node.</li>
+                            <li>Compare the value to insert with the current node.</li>
+                            <li>If smaller = move to the left child.</li>
+                            <li>If larger = move to the right child.</li>
+                            <li>If equal = duplicate values are not inserted (BST property requires unique values).</li>
+                            <li>When a null position is reached, insert the new node there as a leaf.</li>
                         </ul>
                     </div>
 
                     <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>
-                                <span className="font-medium">Time:</span> O(h) where h is tree height
-                            </li>
-                            <li>
-                                <span className="font-medium">Best case:</span> O(log n) balanced tree
-                            </li>
-                            <li>
-                                <span className="font-medium">Worst case:</span> O(n) skewed tree
-                            </li>
-                            <li>
-                                <span>Space:</span> O(h)
-                            </li>
+                        <li>
+                            <span className="font-medium">Time: O(h) where h is the tree height</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Insertion traverses from root to the insertion point, at most h comparisons where h is the height of the tree.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Best/Average case: O(log n) — balanced tree</span>
+                            <p className="text-xs text-gray-500 mt-0.5">In a balanced tree, height is log n so insertion is logarithmic. Random insertion order tends to produce reasonably balanced trees.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Worst case: O(n) — skewed tree</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Inserting values in sorted order creates a degenerate tree (like a linked list) with height n, making each insertion O(n).</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Space: O(h)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Recursive insertion uses O(h) call stack space.</p>
+                        </li>
                         </ul>
                     </div>
                 </div>
