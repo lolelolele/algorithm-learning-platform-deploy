@@ -78,16 +78,19 @@ export function generateDFSSteps(graph, startId) {
         });
         
         // record current DFS state for visualisation
+        const isComplete = stack.length === 0;
         steps.push({
             visitedNodes: new Set(visited),
-            currentNode: current,
+            currentNode: isComplete ? null : current,
             stack: [...stack],
             visitedOrder: [...visitedOrder],
             highlightEdges: newHighlightEdges,
-            explanation: stack.length > 0
-                ? `Visiting node ${current}. Exploring its neighbours. Stack: [${stack.join(", ")}]`
-                : `Visiting node ${current}. Stack is now empty — DFS complete.`,
-            whyThisStep: `Node ${current} was popped from the top of the stack (LIFO). DFS goes as deep as possible along each branch before backtracking, which is why it explores one full path before trying another.`,
+            explanation: isComplete
+                ? `Node ${current} visited. Stack is now empty — DFS complete. All reachable nodes have been visited.`
+                : `Visiting node ${current}. Exploring its neighbours. Stack: [${stack.join(", ")}]`,
+            whyThisStep: isComplete
+                ? `DFS is complete. Every reachable node has been visited by always exploring the deepest unvisited node first. The visited order was: ${visitedOrder.join(" → ")}.`
+                : `Node ${current} is popped from the top of the stack (LIFO). DFS goes as deep as possible along each branch before backtracking, which is why it explores one full path before trying another.`,
             operationCount,
         });
     }
