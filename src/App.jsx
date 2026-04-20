@@ -3,19 +3,19 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 
-import Dijkstra from "./pages/Dijkstra";
-import AStar from "./pages/AStar";
-import BFS from "./pages/BFS";
-import DFS from "./pages/DFS";
+import Dijkstra from "./pages/graph-pathfinding/Dijkstra";
+import AStar from "./pages/graph-pathfinding/AStar";
+import BFS from "./pages/graph-pathfinding/BFS";
+import DFS from "./pages/graph-pathfinding/DFS";
 
-import Bubble from "./pages/Bubble";
-import Merge from "./pages/Merge";
-import Quick from "./pages/Quick";
-import Heap from "./pages/Heap";
+import Bubble from "./pages/sorting/Bubble";
+import Merge from "./pages/sorting/Merge";
+import Quick from "./pages/sorting/Quick";
+import Heap from "./pages/sorting/Heap";
 
-import BSTSearch from "./pages/BSTSearch";
-import BSTInsert from "./pages/BSTInsert";
-import BSTDelete from "./pages/BSTDelete";
+import BSTSearch from "./pages/bst/BSTSearch";
+import BSTInsert from "./pages/bst/BSTInsert";
+import BSTDelete from "./pages/bst/BSTDelete";
 
 import Placeholder from "./pages/Placeholder";
 

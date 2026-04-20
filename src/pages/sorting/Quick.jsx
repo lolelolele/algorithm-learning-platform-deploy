@@ -1,17 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
-import AlgorithmLayout from "../components/AlgorithmLayout";
-import QuickRenderer from "../features/sorting/quick/QuickRenderer";
-import { generateQuickSteps } from "../features/sorting/quick/logic/quickSteps";
-import { defaultArray, presets } from "../features/sorting/data/arrays";
-import ChallengeMode from "../components/ChallengeMode";
-import { generateQuickChallengeQuestions } from "../features/sorting/quick/logic/quickChallengeQuestions";
+import AlgorithmLayout from "../../components/AlgorithmLayout";
+import QuickRenderer from "../../features/sorting/quick/QuickRenderer";
+import { generateQuickSteps } from "../../features/sorting/quick/logic/quickSteps";
+import { defaultArray, presets } from "../../features/sorting/data/arrays";
+import ChallengeMode from "../../components/ChallengeMode";
+import { generateQuickChallengeQuestions } from "../../features/sorting/quick/logic/quickChallengeQuestions";
 
 // ui icons for playback controls
-import playIcon from "../assets/icons/play.png";
-import pauseIcon from "../assets/icons/pause.png";
-import stepForwardIcon from "../assets/icons/step_forward.png";
-import stepBackwardIcon from "../assets/icons/step_backward.png";
-import resetIcon from "../assets/icons/reset.png";
+import playIcon from "../../assets/icons/play.png";
+import pauseIcon from "../../assets/icons/pause.png";
+import stepForwardIcon from "../../assets/icons/step_forward.png";
+import stepBackwardIcon from "../../assets/icons/step_backward.png";
+import resetIcon from "../../assets/icons/reset.png";
 
 export default function Quick() {
     const [array, setArray] = useState(defaultArray);

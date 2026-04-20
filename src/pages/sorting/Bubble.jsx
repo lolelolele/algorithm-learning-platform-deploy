@@ -1,17 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
-import AlgorithmLayout from "../components/AlgorithmLayout";
-import BubbleRenderer from "../features/sorting/bubble/BubbleRenderer";
-import { generateBubbleSteps } from "../features/sorting/bubble/logic/bubbleSteps";
-import { defaultArray, presets } from "../features/sorting/data/arrays";
-import ChallengeMode from "../components/ChallengeMode";
-import { generateBubbleChallengeQuestions } from "../features/sorting/bubble/logic/bubbleChallengeQuestions";
+import AlgorithmLayout from "../../components/AlgorithmLayout";
+import BubbleRenderer from "../../features/sorting/bubble/BubbleRenderer";
+import { generateBubbleSteps } from "../../features/sorting/bubble/logic/bubbleSteps";
+import { defaultArray, presets } from "../../features/sorting/data/arrays";
+import ChallengeMode from "../../components/ChallengeMode";
+import { generateBubbleChallengeQuestions } from "../../features/sorting/bubble/logic/bubbleChallengeQuestions";
 
 // ui icons for playback controls
-import playIcon from "../assets/icons/play.png";
-import pauseIcon from "../assets/icons/pause.png";
-import stepForwardIcon from "../assets/icons/step_forward.png";
-import stepBackwardIcon from "../assets/icons/step_backward.png";
-import resetIcon from "../assets/icons/reset.png";
+import playIcon from "../../assets/icons/play.png";
+import pauseIcon from "../../assets/icons/pause.png";
+import stepForwardIcon from "../../assets/icons/step_forward.png";
+import stepBackwardIcon from "../../assets/icons/step_backward.png";
+import resetIcon from "../../assets/icons/reset.png";
 
 export default function Bubble() {
     const [array, setArray] = useState(defaultArray);

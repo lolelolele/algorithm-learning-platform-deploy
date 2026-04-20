@@ -1,17 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
-import AlgorithmLayout from "../components/AlgorithmLayout";
-import WeightedGraphRenderer from "../features/graph-pathfinding/weighted/WeightedGraphRenderer";
-import { defaultGraph, templates } from "../features/graph-pathfinding/weighted/dijkstra/data/graphs";
-import { generateDijkstraSteps } from "../features/graph-pathfinding/weighted/dijkstra/logic/dijkstraSteps";
-import ChallengeMode from "../components/ChallengeMode";
-import { generateDijkstraChallengeQuestions } from "../features/graph-pathfinding/weighted/dijkstra/logic/dijkstraChallengeQuestions";
+import AlgorithmLayout from "../../components/AlgorithmLayout";
+import WeightedGraphRenderer from "../../features/graph-pathfinding/weighted/WeightedGraphRenderer";
+import { defaultGraph, templates } from "../../features/graph-pathfinding/weighted/a-star/data/graphs";
+import { generateAStarSteps } from "../../features/graph-pathfinding/weighted/a-star/logic/aStarSteps";
+import ChallengeMode from "../../components/ChallengeMode";
+import { generateAStarChallengeQuestions } from "../../features/graph-pathfinding/weighted/a-star/logic/aStarChallengeQuestions";
 
 // ui icons for playback controls
-import playIcon from "../assets/icons/play.png";
-import pauseIcon from "../assets/icons/pause.png";
-import stepForwardIcon from "../assets/icons/step_forward.png";
-import stepBackwardIcon from "../assets/icons/step_backward.png";
-import resetIcon from "../assets/icons/reset.png";
+import playIcon from "../../assets/icons/play.png";
+import pauseIcon from "../../assets/icons/pause.png";
+import stepForwardIcon from "../../assets/icons/step_forward.png";
+import stepBackwardIcon from "../../assets/icons/step_backward.png";
+import resetIcon from "../../assets/icons/reset.png";
 
 // deep clone a graph so we can safely mutate edge weights
 function cloneGraph(g) {
@@ -22,7 +22,7 @@ function cloneGraph(g) {
     };
 }
 
-export default function Dijkstra() {
+export default function AStar() {
 
     /* Graph configuration:
         - graph: current graph data
@@ -39,13 +39,13 @@ export default function Dijkstra() {
     const [stepIndex, setStepIndex] = useState(0);
 
     /* step-by-step execution trace for the current graph and endpoints */
-    const steps = useMemo(() => generateDijkstraSteps(graph, startId, endId), [graph, startId, endId]);
+    const steps = useMemo(() => generateAStarSteps(graph, startId, endId), [graph, startId, endId]);
     
     /* prevents out of range access if the steps array shrinks after changing graph */
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
 
-    const challengeQuestions = useMemo(() => generateDijkstraChallengeQuestions(steps), [steps]);
+    const challengeQuestions = useMemo(() => generateAStarChallengeQuestions(steps), [steps]);
 
     /* Playback controls:
         - isPlaying: whether autoplay is running
@@ -80,14 +80,14 @@ export default function Dijkstra() {
         return () => clearTimeout(timer);
     }, [isPlaying, speed, safeStepIndex, steps.length]);
 
-    // when template changes it loads a new graph and resets weight edits
+    // when template changes it loads a new graph and resets weight edit
     function handleTemplateChange(value) {
         setSelectedTemplateId(value);
         setIsPlaying(false);
         setStepIndex(0);
         setWeightEdits({});
         setWeightError("");
-
+    
         if (value === "custom") {
             const g = cloneGraph(defaultGraph);
             setGraph(g);
@@ -153,47 +153,57 @@ export default function Dijkstra() {
 
     return (
         <AlgorithmLayout
-            title="Dijkstra's Shortest Path Algorithm"
+            title="A* Search Algorithm"
 
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
 
-                    {/*dijkstra description*/}
+                    {/*a-star description*/}
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                            Dijkstra's algorithm finds the shortest path between a start node and
-                            all other nodes in a weighted graph where all edge weights are non-negative.
-                            It works greedily which mean at each step it selects the unvisited node with the
-                            smallest known distance, guaranteeing that once a node is visited its
-                            shortest distance is finalised and will never be improved upon.
+                                A* is an informed search algorithm that finds the shortest path from
+                                a start node to a goal node. Unlike Dijkstra which explores in all
+                                directions equally, A* uses a heuristic estimate h(n) of the remaining
+                                distance to the goal to guide the search toward the target. This makes it
+                                significantly faster in practice while still guaranteeing the optimal path,
+                                provided the heuristic never overestimates the true cost.
                             </p>
                     </div>
 
-                    {/* steps on how dijkstra works */}
+                    <div>
+                        <h3 className="font-medium mb-1">The f(n) = g(n) + h(n) formula</h3>
+                        <ul className="list-disc ml-5 space-y-1 text-gray-600">
+                            <li><span className="font-medium">g(n)</span>: the actual cost of the path from the start node to node n.</li>
+                            <li><span className="font-medium">h(n)</span>: the heuristic estimate of the cost from n to the goal. In this visualisation, h(n) values are pre-assigned to each node.</li>
+                            <li><span className="font-medium">f(n) = g(n) + h(n)</span>:the total estimated cost of the cheapest path through n. A* always expands the node with the lowest f score.</li>
+                        </ul>
+                    </div>
+
+                    {/* steps on how a-star works */}
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Assign distance 0 to the start node and infinity (∞) to all others.</li>
-                            <li>Add the start node to the priority queue (frontier).</li>
-                            <li>Repeatedly select the node with the smallest tentative distance from the frontier.</li>
-                            <li>For each of its neighbours, check if travelling through the current node gives a shorter path — this is called edge relaxation.</li>
-                            <li>If a shorter path is found, update the neighbour's distance and add it to the frontier.</li>
-                            <li>Mark the current node as visited — its shortest distance is now permanently known.</li>
-                            <li>Repeat until the target node is visited or the frontier is empty.</li>
+                            <li>Initialise with the start node in the open list with f = h(start).</li>
+                            <li>Select the node with the lowest f score from the open list.</li>
+                            <li>If it is the goal, the shortest path has been found.</li>
+                            <li>Otherwise, expand its neighbours: calculate g and f scores.</li>
+                            <li>Add or update neighbours in the open list if a better path is found.</li>
+                            <li>Move the current node to the closed list (visited).</li>
+                            <li>Repeat until the goal is reached or the open list is empty.</li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 className="font-medium mb-1">Complexity</h3>
+                    <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
                             <li>
                                 <span className="font-medium">Time: O((V + E) log V)</span>
-                                <p className="text-xs text-gray-500 mt-0.5">Each of the V nodes is extracted from the priority queue once (O(log V) per extraction). Each of the E edges is relaxed once (O(log V) per relaxation to update the queue). Total: O((V + E) log V).</p>
+                                <p className="text-xs text-gray-500 mt-0.5">Similar to Dijkstra in the worst case. With a good heuristic, A* explores far fewer nodes in practice, potentially much faster than Dijkstra on large graphs.</p>
                             </li>
                             <li>
-                                <span className="font-medium">Space: O(V + E)</span>
-                                <p className="text-xs text-gray-500 mt-0.5">The algorithm stores the graph (V nodes + E edges), the distance array (V entries), and the priority queue (up to V entries). For dense graphs this can be significant.</p>
+                                <span className="font-medium">Space: O(V)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">The open and closed lists can contain up to V nodes each. A*'s main drawback is memory usage as it must keep all generated nodes in memory.</p>
                             </li>
                         </ul>
                     </div>
@@ -217,9 +227,9 @@ export default function Dijkstra() {
                             <option value="custom">Default</option>
 
                             {/* group templates selection */}
-                            <optgroup label="Simple">
+                            <optgroup label="Grid">
                                 {templates
-                                    .filter(t => t.category === "Simple")
+                                    .filter(t => t.category === "Grid")
                                     .map(t => (
                                         <option key={t.id} value={t.id}>
                                             {t.name}
@@ -227,9 +237,9 @@ export default function Dijkstra() {
                                     ))}
                             </optgroup>
 
-                            <optgroup label="Medium">
+                            <optgroup label="Heuristic Trap">
                                 {templates
-                                    .filter(t => t.category === "Medium")
+                                    .filter(t => t.category === "Heuristic Trap")
                                     .map(t => (
                                         <option key={t.id} value={t.id}>
                                             {t.name}
@@ -237,9 +247,9 @@ export default function Dijkstra() {
                                     ))}
                             </optgroup>
 
-                            <optgroup label="Dense">
+                            <optgroup label="Uniform Weights">
                                 {templates
-                                    .filter(t => t.category === "Dense")
+                                    .filter(t => t.category === "Uniform Weights")
                                     .map(t => (
                                         <option key={t.id} value={t.id}>
                                             {t.name}
@@ -322,7 +332,7 @@ export default function Dijkstra() {
                                 Reset
                             </button>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             }
 
@@ -340,7 +350,14 @@ export default function Dijkstra() {
                         graph={graph}
                         startId={startId}
                         endId={endId}
-                        step={currentStep}
+                        step={{
+                            currentNode: currentStep.currentNode,
+                            visited: currentStep.visited,
+                            frontier: currentStep.openList,
+                            activeEdge: currentStep.activeEdge,
+                            shortestPathNodes: currentStep.shortestPathNodes,
+                            shortestPathEdges: currentStep.shortestPathEdges,
+                        }}
                     />
                 </ChallengeMode>
             }
@@ -349,22 +366,17 @@ export default function Dijkstra() {
             metrics={
                 <div className="text-sm text-gray-700 space-y-3">
                     <div>
-                        <h3 className="font-medium mb-2">Frontier</h3>
-
-                        {/* displays the current frontier snapshot with the node and its distances */}
+                        <h3 className="font-medium mb-2">Open List</h3>
                         <div className="rounded-md border bg-white p-2 text-gray-700">
-                            {currentStep?.pq?.length
-                                ? currentStep.pq
-                                    .map(
-                                        (item) =>
-                                            `${item.id}(${item.dist === Infinity ? "∞" : item.dist})`
-                                    )
-                                    .join(", ")
+                            {currentStep?.openList?.length > 0
+                                ? currentStep.openList.map(nodeId =>
+                                    `${nodeId}(f:${currentStep.f?.[nodeId] !== undefined && currentStep.f[nodeId] !== Infinity
+                                        ? currentStep.f[nodeId]
+                                        : "∞"})`
+                                  ).join(", ")
                                 : "Empty"}
                         </div>
-                    
                     </div>
-
                     <div>
                         <h3 className="font-medium mb-2">Live Counters</h3>
                         <ul className="space-y-1 text-gray-600">
@@ -381,31 +393,25 @@ export default function Dijkstra() {
                 <div className="text-sm text-gray-700 space-y-3">
                     <div className="text-xs text-gray-500 space-y-1">
                         <div>Phase: {currentStep?.phase ?? "-"}</div>
-                        <div>Frontier: {currentStep?.frontierWithDist ?? "∅"}</div>
-                    </div>
-
-                    {currentStep?.explanationParts ?(
-                        <div className="space-y-2 leading-relaxed">
-                            <div>
-                                <span className="font-semibold">Rule: </span>
-                                <span>{currentStep.explanationParts.rule}</span>
-                            </div>
-
-                            <div>
-                                <span className="font-semibold">Reason: </span>
-                                <span>{currentStep.explanationParts.reason}</span>
-                            </div>
-
-                            <div>
-                                <span className="font-semibold">Effect: </span>
-                                <span>{currentStep.explanationParts.effect}</span>
-                            </div>
+                        <div>Open List: {currentStep?.openList?.length > 0
+                            ? currentStep.openList.join(", ")
+                            : "∅"}
                         </div>
-                    ) : (
-                        <p className="leading-relaxed">
-                            {currentStep?.explanation ?? "No explanation available for this step yet."}
-                        </p>
-                    )}
+                    </div>
+                    <div className="space-y-2 leading-relaxed">
+                        <div>
+                            <span className="font-semibold">Rule: </span>
+                            <span>{currentStep?.explanationParts?.rule ?? "—"}</span>
+                        </div>
+                        <div>
+                            <span className="font-semibold">Reason: </span>
+                            <span>{currentStep?.explanationParts?.reason ?? "—"}</span>
+                        </div>
+                        <div>
+                            <span className="font-semibold">Effect: </span>
+                            <span>{currentStep?.explanationParts?.effect ?? "—"}</span>
+                        </div>
+                    </div>
                 </div>
             }
 

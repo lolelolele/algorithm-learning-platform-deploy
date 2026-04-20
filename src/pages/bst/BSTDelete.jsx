@@ -1,42 +1,45 @@
 import { useState, useEffect, useMemo } from "react";
-import AlgorithmLayout from "../components/AlgorithmLayout";
-import BSTRenderer from "../features/bst/BSTRenderer";
-import { buildBST, buildBSTFromString, presetTrees, defaultValues } from "../features/bst/data/trees";
-import { generateBSTInsertSteps } from "../features/bst/insert/logic/bstInsertSteps";
-import ChallengeMode from "../components/ChallengeMode";
-import { generateBSTInsertChallengeQuestions } from "../features/bst/insert/logic/bstInsertChallengeQuestions";
+import AlgorithmLayout from "../../components/AlgorithmLayout";
+import BSTRenderer from "../../features/bst/BSTRenderer";
+import { buildBST, buildBSTFromString, flattenTree, presetTrees, defaultValues } from "../../features/bst/data/trees";
+import { generateBSTDeleteSteps } from "../../features/bst/delete/logic/bstDeleteSteps";
+import ChallengeMode from "../../components/ChallengeMode";
+import { generateBSTDeleteChallengeQuestions } from "../../features/bst/delete/logic/bstDeleteChallengeQuestions";
 
 // ui icons for playback controls
-import playIcon from "../assets/icons/play.png";
-import pauseIcon from "../assets/icons/pause.png";
-import stepForwardIcon from "../assets/icons/step_forward.png";
-import stepBackwardIcon from "../assets/icons/step_backward.png";
-import resetIcon from "../assets/icons/reset.png";
+import playIcon from "../../assets/icons/play.png";
+import pauseIcon from "../../assets/icons/pause.png";
+import stepForwardIcon from "../../assets/icons/step_forward.png";
+import stepBackwardIcon from "../../assets/icons/step_backward.png";
+import resetIcon from "../../assets/icons/reset.png";
 
-export default function BSTInsert() {
+export default function BSTDelete() {
 
     const [treeRoot, setTreeRoot] = useState(() => buildBST(defaultValues));
     const [selectedPreset, setSelectedPreset] = useState("balanced-small");
     const [customInput, setCustomInput] = useState("");
     const [inputError, setInputError] = useState("");
 
-    const [insertValue, setInsertValue] = useState(2);
-    const [insertInput, setInsertInput] = useState("2");
+    /* delete target picked from existing nodes in the tree */
+    const [deleteValue, setDeleteValue] = useState(3);
 
     const [stepIndex, setStepIndex] = useState(0);
     const [isPlaying, setIsPlaying] = useState(false);
     const [speed, setSpeed] = useState(1);
 
-    const steps = useMemo(() => generateBSTInsertSteps(treeRoot, insertValue), [treeRoot, insertValue]);
+    const steps = useMemo(() => generateBSTDeleteSteps(treeRoot, deleteValue), [treeRoot, deleteValue]);
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
-    const challengeQuestions = useMemo(() => generateBSTInsertChallengeQuestions(steps), [steps]);
+    const challengeQuestions = useMemo(() => generateBSTDeleteChallengeQuestions(steps), [steps]);
+
+    /* get flat list of current node values for the delete selector */
+    const treeNodes = flattenTree(treeRoot);
 
     /* if the start/end changes -> reset playback */
     useEffect(() => {
         setIsPlaying(false);
         setStepIndex(0);
-    }, [treeRoot, insertValue]);
+    }, [treeRoot, deleteValue]);
 
     /* autoplay timer */
     useEffect(() => {
@@ -61,7 +64,12 @@ export default function BSTInsert() {
         setCustomInput("");
         setInputError("");
         const preset = presetTrees.find(p => p.id === id);
-        if (preset) setTreeRoot(buildBST(preset.values));
+        if (preset) {
+            const newRoot = buildBST(preset.values);
+            setTreeRoot(newRoot);
+            /* set delete value to first node */
+            setDeleteValue(preset.values[0]);
+        }
     }
 
     function handleCustomBuild() {
@@ -73,66 +81,93 @@ export default function BSTInsert() {
         setInputError("");
         setSelectedPreset("");
         setTreeRoot(result);
+        setDeleteValue(result.value);
     }
 
     return (
         <AlgorithmLayout
-            title="Binary Search Tree (BST) Insert"
+            title="Binary Search Tree (BST) Delete"
             editorLabel="Tree Editor"
 
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
 
-                    {/*bfs description*/}
+                    {/*bts delete description*/}
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                            BST Insertion adds a new value to the tree while preserving the BST property, meaning that
-                            every left subtree contains only smaller values and every right subtree
-                            contains only larger values. The algorithm searches for the correct position
-                            in exactly the same way as BST Search, then attaches the new node as a
-                            leaf at that position.
+                            BST Deletion removes a node from the tree while maintaining the BST
+                            property. It is the most complex BST operation because removing a node
+                            with children requires careful restructuring to preserve the ordering
+                            of all remaining values. There are three distinct cases depending on
+                            how many children the node being deleted has.
                             </p>
                     </div>
 
-                    {/* steps on how bfs works */}
+                    {/* steps on how bts delete works */}
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Start at the root node.</li>
-                            <li>Compare the value to insert with the current node.</li>
-                            <li>If smaller = move to the left child.</li>
-                            <li>If larger = move to the right child.</li>
-                            <li>If equal = duplicate values are not inserted (BST property requires unique values).</li>
-                            <li>When a null position is reached, insert the new node there as a leaf.</li>
+                        <li><span className="font-medium">Leaf node:</span> simply remove it.</li>
+                            <li><span className="font-medium">One child:</span> replace node with its child.</li>
+                            <li><span className="font-medium">Two children:</span> replace with in-order successor, then delete successor.</li>
                         </ul>
                     </div>
 
                     <div>
+                        <h3 className="font-medium mb-1">The Three Cases</h3>
+                        <ul className="list-disc ml-5 space-y-2 text-gray-600">
+                            <li>
+                                <span className="font-medium">Case 1 — Leaf node (no children):</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Simply remove the node. No restructuring needed since removing a leaf cannot affect any other node's position.</p>
+                            </li>
+                            <li>
+                                <span className="font-medium">Case 2 — One child:</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Replace the node with its child.</p>
+                            </li>
+                            <li>
+                                <span className="font-medium">Case 3 — Two children:</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Find the in-order successor which is the smallest value in the right subtree. Replace the deleted node's value with the successor's value, then delete the successor (which has at most one child, reducing to Case 1 or 2).</p>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h3 className="font-medium mb-1">Why the in-order successor?</h3>
+                        <p className="text-gray-600 text-xs">
+                            The in-order successor is the smallest value greater than the deleted node.
+                            Replacing the deleted node with it preserves the BST property as it is
+                            larger than everything in the left subtree and smaller than everything
+                            else in the right subtree.
+                        </p>
+                    </div>
+
+
+                    <div>
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                        <li>
-                            <span className="font-medium">Time: O(h) where h is the tree height</span>
-                            <p className="text-xs text-gray-500 mt-0.5">Insertion traverses from root to the insertion point, at most h comparisons where h is the height of the tree.</p>
-                        </li>
-                        <li>
-                            <span className="font-medium">Best/Average case: O(log n) — balanced tree</span>
-                            <p className="text-xs text-gray-500 mt-0.5">In a balanced tree, height is log n so insertion is logarithmic. Random insertion order tends to produce reasonably balanced trees.</p>
-                        </li>
-                        <li>
-                            <span className="font-medium">Worst case: O(n) — skewed tree</span>
-                            <p className="text-xs text-gray-500 mt-0.5">Inserting values in sorted order creates a degenerate tree (like a linked list) with height n, making each insertion O(n).</p>
-                        </li>
-                        <li>
-                            <span className="font-medium">Space: O(h)</span>
-                            <p className="text-xs text-gray-500 mt-0.5">Recursive insertion uses O(h) call stack space.</p>
-                        </li>
+                            <li>
+                                <span className="font-medium">Time: O(h) where h is the tree height</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Finding the node to delete takes O(h). Finding the in-order successor (Case 3) also takes O(h). Total is O(h).</p>
+                            </li>
+                            <li>
+                                <span className="font-medium">Best/Average case: O(log n) — balanced tree</span>
+                                <p className="text-xs text-gray-500 mt-0.5">In a balanced BST, height is log n so deletion is logarithmic.</p>
+                            </li>
+                            <li>
+                                <span className="font-medium">Worst case: O(n) — skewed tree</span>
+                                <p className="text-xs text-gray-500 mt-0.5">A degenerate tree has height n, making deletion linear in the worst case.</p>
+                            </li>
+                            <li>
+                                <span className="font-medium">Space: O(h)</span>
+                                <p className="text-xs text-gray-500 mt-0.5">Recursive deletion uses O(h) call stack space.</p>
+                            </li>
                         </ul>
                     </div>
                 </div>
             }
 
-            /* supports template switching and selcting start/end nodes */
+            /* supports preset switching, custom tree input and node to delete */
             graphEditor={
                 <div className="space-y-4 text-sm">
 
@@ -185,26 +220,18 @@ export default function BSTInsert() {
                         </div>
                     </div>
 
-                    {/* insert value */}
+                    {/* delete node picker — shows all values currently in tree */}
                     <div>
-                        <label className="block font-medium mb-1">Insert Value:</label>
-                        <div className="flex gap-2">
-                            <input
-                                type="number"
-                                className="flex-1 rounded-md border p-2 text-sm"
-                                value={insertInput}
-                                onChange={e => setInsertInput(e.target.value)}
-                            />
-                            <button
-                                className="rounded-md border px-3 py-1 text-sm hover:bg-gray-100"
-                                onClick={() => {
-                                    const v = parseInt(insertInput);
-                                    if (!isNaN(v)) setInsertValue(v);
-                                }}
-                            >
-                                Insert
-                            </button>
-                        </div>
+                        <label className="block font-medium mb-1">Node to Delete:</label>
+                        <select
+                            className="w-full rounded-md border p-2"
+                            value={deleteValue}
+                            onChange={e => setDeleteValue(Number(e.target.value))}
+                        >
+                            {treeNodes.map(n => (
+                                <option key={n.id} value={n.value}>{n.value}</option>
+                            ))}
+                        </select>
                     </div>
                 </div>
             }
@@ -230,8 +257,8 @@ export default function BSTInsert() {
             metrics={
                 <div className="text-sm text-gray-700 space-y-3">
                     <div>
-                        <span className="font-medium">Inserting: </span>
-                        <span className="font-mono">{insertValue}</span>
+                        <span className="font-medium">Deleting: </span>
+                        <span className="font-mono">{deleteValue}</span>
                     </div>
                     <div>
                         <span className="font-medium">Current Node: </span>
@@ -246,9 +273,15 @@ export default function BSTInsert() {
                         <span>{currentStep.visitedNodes?.length ?? 0}</span>
                     </div>
                     <div>
-                        <span className="font-medium">Result: </span>
-                        <span className={currentStep.foundNode ? "text-green-600 font-medium" : "text-gray-500"}>
-                            {currentStep.foundNode ? "Inserted" : "Searching for position"}
+                        <span className="font-medium">Case: </span>
+                        <span className="text-gray-600">
+                            {currentStep.deletedNode
+                                ? currentStep.highlightNodes?.length > 0
+                                    ? "Two children (successor)"
+                                    : currentStep.explanation?.includes("leaf")
+                                        ? "Leaf node"
+                                        : "One child"
+                                : "Searching"}
                         </span>
                     </div>
                     <div className="p-2 rounded bg-gray-50 border text-xs text-gray-600">

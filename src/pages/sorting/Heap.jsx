@@ -1,17 +1,17 @@
 import { useState, useEffect, useMemo } from "react";
-import AlgorithmLayout from "../components/AlgorithmLayout";
-import HeapRenderer from "../features/sorting/heap/HeapRenderer";
-import { generateHeapSteps } from "../features/sorting/heap/logic/heapSteps";
-import { defaultArray, presets } from "../features/sorting/data/arrays";
-import ChallengeMode from "../components/ChallengeMode";
-import { generateHeapChallengeQuestions } from "../features/sorting/heap/logic/heapChallengeQuestions";
+import AlgorithmLayout from "../../components/AlgorithmLayout";
+import HeapRenderer from "../../features/sorting/heap/HeapRenderer";
+import { generateHeapSteps } from "../../features/sorting/heap/logic/heapSteps";
+import { defaultArray, presets } from "../../features/sorting/data/arrays";
+import ChallengeMode from "../../components/ChallengeMode";
+import { generateHeapChallengeQuestions } from "../../features/sorting/heap/logic/heapChallengeQuestions";
 
 // ui icons for playback controls
-import playIcon from "../assets/icons/play.png";
-import pauseIcon from "../assets/icons/pause.png";
-import stepForwardIcon from "../assets/icons/step_forward.png";
-import stepBackwardIcon from "../assets/icons/step_backward.png";
-import resetIcon from "../assets/icons/reset.png";
+import playIcon from "../../assets/icons/play.png";
+import pauseIcon from "../../assets/icons/pause.png";
+import stepForwardIcon from "../../assets/icons/step_forward.png";
+import stepBackwardIcon from "../../assets/icons/step_backward.png";
+import resetIcon from "../../assets/icons/reset.png";
 
 export default function Heap() {
     const [array, setArray] = useState(defaultArray);

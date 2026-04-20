@@ -1,19 +1,19 @@
 import { useState, useEffect, useMemo } from "react";
-import AlgorithmLayout from "../components/AlgorithmLayout";
-import TraversalRenderer from "../features/graph-pathfinding/traversal/TraversalRenderer";
-import { defaultGraph, templates } from "../features/graph-pathfinding/traversal/bfs/data/graphs";
-import { generateBFSSteps } from "../features/graph-pathfinding/traversal/bfs/logic/bfsSteps";
-import ChallengeMode from "../components/ChallengeMode";
-import { generateBFSChallengeQuestions } from "../features/graph-pathfinding/traversal/bfs/logic/bfsChallengeQuestions";
+import AlgorithmLayout from "../../components/AlgorithmLayout";
+import TraversalRenderer from "../../features/graph-pathfinding/traversal/TraversalRenderer";
+import { defaultGraph, templates } from "../../features/graph-pathfinding/traversal/dfs/data/graphs";
+import { generateDFSSteps } from "../../features/graph-pathfinding/traversal/dfs/logic/dfsSteps";
+import ChallengeMode from "../../components/ChallengeMode";
+import { generateDFSChallengeQuestions } from "../../features/graph-pathfinding/traversal/dfs/logic/dfsChallengeQuestions";
 
 // ui icons for playback controls
-import playIcon from "../assets/icons/play.png";
-import pauseIcon from "../assets/icons/pause.png";
-import stepForwardIcon from "../assets/icons/step_forward.png";
-import stepBackwardIcon from "../assets/icons/step_backward.png";
-import resetIcon from "../assets/icons/reset.png";
+import playIcon from "../../assets/icons/play.png";
+import pauseIcon from "../../assets/icons/pause.png";
+import stepForwardIcon from "../../assets/icons/step_forward.png";
+import stepBackwardIcon from "../../assets/icons/step_backward.png";
+import resetIcon from "../../assets/icons/reset.png";
 
-export default function BFS() {
+export default function DFS() {
 
     /* Graph configuration:
         - graph: current graph data
@@ -34,13 +34,13 @@ export default function BFS() {
     const [speed, setSpeed] = useState(1);
 
     /* step-by-step execution trace for the current graph and endpoints */
-    const steps = useMemo(() => generateBFSSteps(graph, startId), [graph, startId]);
+    const steps = useMemo(() => generateDFSSteps(graph, startId), [graph, startId]);
     
     /* prevents out of range access if the steps array shrinks after changing graph */
     const safeStepIndex = Math.min(stepIndex, steps.length - 1);
     const currentStep = steps[safeStepIndex];
 
-    const challengeQuestions = useMemo(() => generateBFSChallengeQuestions(steps), [steps]);
+    const challengeQuestions = useMemo(() => generateDFSChallengeQuestions(steps), [steps]);
 
     /* if the start/end changes -> reset playback */
     useEffect(() => {
@@ -68,40 +68,42 @@ export default function BFS() {
 
     return (
         <AlgorithmLayout
-            title="Breadth-First Search (BFS)"
+            title="Depth-First Search (DFS)"
 
             algoInfo={
                 <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
 
-                    {/*bfs description*/}
+                    {/*dfs description*/}
                     <div>
                         <h3 className="font-medium mb-1">Description</h3>
                             <p className="text-sm text-gray-600">
-                            Breadth-First Search explores a graph level by level, starting from
-                            a source node. It visits all nodes at level 1 first, then all nodes
-                            at level 2, and so on. This layer-by-layer approach guarantees that
-                            BFS finds the shortest path (in terms of number of edges) in an
-                            unweighted graph.
+                            Depth-First Search explores a graph by going as deep as possible along
+                            each branch before backtracking. Starting from a source node, it follows
+                            one path all the way to a dead end, then backtracks to explore other
+                            branches. It uses a stack (LIFO) instead of BFS's queue, which means it 
+                            prioritises depth over breadth.
                             </p>
                     </div>
 
-                    {/* steps on how bfs works */}
+                    {/* steps on how dfs works */}
                     <div>
                         <h3 className="font-medium mb-1">How it works</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
-                            <li>Place the start node in a queue and mark it as visited.</li>
-                            <li>Dequeue the front node and explore all its unvisited neighbours.</li>
-                            <li>Mark each neighbour as visited and enqueue them.</li>
-                            <li>Repeat until the queue is empty.</li>
+                            <li>Push the start node onto the stack and mark it as seen.</li>
+                            <li>Pop the top node from the stack (LIFO: Last In, First Out) and mark it as visited.</li>
+                            <li>Push all unvisited neighbours onto the stack.</li>
+                            <li>Repeat until the stack is empty.</li>
+                            <li>If a dead end is reached (no unvisited neighbours), the algorithm automatically backtracks by popping the next node from the stack.</li>
                         </ul>
                     </div>
 
                     <div>
-                        <h3 className="font-medium mb-1">Queue vs Stack</h3>
+                        <h3 className="font-medium mb-1">Stack vs Queue</h3>
                         <p className="text-gray-600 text-xs">
-                            BFS uses a queue (FIFO). This is what creates the level-by-level behaviour. The
-                            nodes discovered earlier are processed first. Compare with DFS which uses a
-                            stack (LIFO) and dives deep along one branch before exploring others.
+                            DFS uses a stack (LIFO). The most recently discovered node is always explored
+                            next, causing the algorithm to go deep down one path before exploring others.
+                            Compare with BFS which uses a queue (FIFO) and explores level by level.
+                            DFS does not guarantee the shortest path.
                         </p>
                     </div>
 
@@ -109,13 +111,13 @@ export default function BFS() {
                         <h3 className="font-medium mb-1">Complexity</h3>
                         <ul className="list-disc ml-5 space-y-1 text-gray-600">
                         <li>
-                                <span className="font-medium">Time: O(V + E)</span>
-                                <p className="text-xs text-gray-500 mt-0.5">Every node (V) is enqueued and dequeued exactly once. Every edge (E) is examined once to check if the neighbour has been visited. Total work is proportional to the size of the graph.</p>
-                            </li>
-                            <li>
-                                <span className="font-medium">Space: O(V)</span>
-                                <p className="text-xs text-gray-500 mt-0.5">In the worst case the queue holds all nodes at the widest level of the graph. For a complete graph this could be O(V) nodes simultaneously in the queue.</p>
-                            </li>
+                            <span className="font-medium">Time: O(V + E)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">Every node (V) is visited exactly once and every edge (E) is examined once. The total work is linear in the size of the graph, the same as BFS.</p>
+                        </li>
+                        <li>
+                            <span className="font-medium">Space: O(V)</span>
+                            <p className="text-xs text-gray-500 mt-0.5">The stack can contain up to V nodes in the worst case (e.g. a path graph where every node is pushed before any are popped). Recursive DFS uses the call stack which has the same space requirement.</p>
+                        </li>
                         </ul>
                     </div>
                 </div>
@@ -233,7 +235,7 @@ export default function BFS() {
                             startId: startId,
                             currentNode: currentStep.currentNode,
                             visited: Array.from(currentStep.visitedNodes),
-                            frontier: currentStep.queue,
+                            frontier: currentStep.stack,
                             highlightEdges: Array.from(currentStep.highlightEdges),
                         }}
                     />
@@ -249,9 +251,9 @@ export default function BFS() {
                     </div>
 
                     <div>
-                        <span className="font-medium">Queue: </span>
+                        <span className="font-medium">Stack: </span>
                         <span className="font-mono">
-                            [{currentStep.queue.join(", ")}]
+                            [{currentStep.stack.join(", ")}]
                         </span>
                     </div>
 
