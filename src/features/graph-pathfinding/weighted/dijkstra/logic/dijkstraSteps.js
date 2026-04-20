@@ -100,9 +100,9 @@ export function generateDijkstraSteps(graph, startId, endId) {
         prev: { ...prev },
         activeEdge: null,
         explanationParts:{
-            rule: "Initialise tentative distances",
-            reason: "At the start, we assume all nodes are unreachable (∞) until proven otherwise.",
-            effect: `Set dist [${startId}] = 0 because the start node is distance 0 from itself.`, 
+            rule: "Set all distances to infinity except the start node which gets distance 0.",
+            reason: "We don't know the cost to reach any node yet. Infinity means unreachable until proven otherwise.",
+            effect: `${startId} is added to the frontier with distance 0. All other nodes start at ∞.`,
         },
         counters: { ...counters },
         pq: snapshotPQ(pq),
@@ -128,9 +128,9 @@ export function generateDijkstraSteps(graph, startId, endId) {
             prev: { ...prev },
             activeEdge: null,
             explanationParts:{
-                rule: "Pick the frontier node with the smallest tentative distance",
-                reason: "With non-negative weights, the smallest tentative distance is guaranteed to be final (greedy choice).",
-                effect: `Node ${current} becomes 'visited' (finalised). We now relax its outgoing edges.`, 
+                rule: "Select the frontier node with the smallest tentative distance",
+                reason: `${current} has the smallest tentative distance (${dist[current]}). With non-negative weights this distance is now guaranteed to be final.`,
+                effect: `${current} is marked as visited. Its shortest distance of ${dist[current]} is locked. We now check all edges leaving ${current}.`,
             },
             counters: { ...counters },
             pq: snapshotPQ(pq),
@@ -165,9 +165,11 @@ export function generateDijkstraSteps(graph, startId, endId) {
                 prev: { ...prev },
                 activeEdge: edge.id,
                 explanationParts:{
-                    rule: "Relaxation check",
-                    reason: "Try to improve the best known distance to a neighbour using the current node.",
-                    effect: `Try ${current} -> ${neighbour}: ${dist[current]} + ${edge.weight} = ${newDist} (current best: ${oldDist === Infinity ? "∞" : oldDist}).`, 
+                    rule: "Relaxation check: Check if travelling through the current node gives a shorter path to the neighbour.",
+                    reason: `Current distance to ${neighbour}: ${oldDist === Infinity ? "∞" : oldDist}. New path via ${current}: ${dist[current]} + ${edge.weight} = ${newDist}.`,
+                    effect: newDist < oldDist
+                        ? `${newDist} is better than ${oldDist === Infinity ? "∞" : oldDist}, this path will be accepted.`
+                        : `${newDist} is not better than ${oldDist === Infinity ? "∞" : oldDist}, this path will be rejected.`,
                 },
                 counters: { ...counters },
                 pq: snapshotPQ(pq),
@@ -193,10 +195,10 @@ export function generateDijkstraSteps(graph, startId, endId) {
                     dist: { ...dist },
                     prev: { ...prev },
                     activeEdge: edge.id,
-                    explanationParts:{
-                        rule: "Update distance (successful relaxation)",
-                        reason: "We found a shorter path to the neighbour through the current node.",
-                        effect: `Accept the new path. ${neighbour} now has distance ${newDist} via ${current}.`, 
+                    explanationParts: {
+                        rule: "Accept the shorter path: update the distance and add the neighbour to the frontier.",
+                        reason: `The path ${startId} → ... → ${current} → ${neighbour} costs ${newDist}, which is less than the previous best of ${oldDist === Infinity ? "∞" : oldDist}.`,
+                        effect: `${neighbour} now has distance ${newDist} via ${current}. It is added to the frontier to be explored.`,
                     },
                     counters: { ...counters },
                     pq: snapshotPQ(pq),
@@ -215,7 +217,7 @@ export function generateDijkstraSteps(graph, startId, endId) {
                     explanationParts:{
                         rule: "No update (failed relaxation)",
                         reason: "The alternative path is not better than the best-known distance.",
-                        effect: `Reject the new path.  ${newDist} is not better than the current distance ${oldDist}.`, 
+                        effect: `${neighbour} keeps its current distance of ${oldDist}. No changes made.`, 
                     },
                     counters: { ...counters },
                     pq: snapshotPQ(pq),
@@ -241,13 +243,13 @@ export function generateDijkstraSteps(graph, startId, endId) {
         explanationParts: 
             shortestPathNodes.length > 0
                 ? {
-                    rule: "Reconstruct the shortest path",
-                    reason: "We stored predecessors (prev during relaxations, so we can backtrack from the end  node.",
-                    effect: `Highlight path ${shortestPathNodes.join("->")}.`,
+                    rule: "Trace back the shortest path using the predecessor pointers stored during relaxation.",
+                    reason: `Every time we found a shorter path to a node, we recorded which node we came from. Following these pointers from ${endId} back to ${startId} gives the shortest path.`,
+                    effect: `Shortest path: ${shortestPathNodes.join(" → ")} with total cost ${dist[endId]}.`,
                 }
                 : {
-                    rule: "Terminate",
-                    reason: "All reachable nodes have been finalised, but the end node was not reachable.",
+                    rule: "Algorithm complete: no path found.",
+                    reason: `All reachable nodes from ${startId} have been visited but ${endId} was never reached.`,
                     effect: `No path exists from ${startId} to ${endId}.`,
                 },
         counters: { ...counters },
