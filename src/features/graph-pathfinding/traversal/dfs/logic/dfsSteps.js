@@ -79,6 +79,8 @@ export function generateDFSSteps(graph, startId) {
         
         // record current DFS state for visualisation
         const isComplete = stack.length === 0;
+        const newlyPushed = unvisitedNeighbours.filter(n => stack.includes(n));
+
         steps.push({
             visitedNodes: new Set(visited),
             currentNode: isComplete ? null : current,
@@ -86,11 +88,11 @@ export function generateDFSSteps(graph, startId) {
             visitedOrder: [...visitedOrder],
             highlightEdges: newHighlightEdges,
             explanation: isComplete
-                ? `Node ${current} visited. Stack is now empty — DFS complete. All reachable nodes have been visited.`
+                ? `Node ${current} visited. Stack is now empty, DFS complete. All reachable nodes have been visited.`
                 : `Visiting node ${current}. Exploring its neighbours. Stack: [${stack.join(", ")}]`,
             whyThisStep: isComplete
-                ? `DFS is complete. Every reachable node has been visited by always exploring the deepest unvisited node first. The visited order was: ${visitedOrder.join(" → ")}.`
-                : `Node ${current} is popped from the top of the stack (LIFO). DFS goes as deep as possible along each branch before backtracking, which is why it explores one full path before trying another.`,
+                ? `DFS is complete. Every reachable node has been visited by always going as deep as possible before backtracking. The full visited order was: ${visitedOrder.join(" → ")}.`
+                : `${current} was at the top of the stack. DFS always pops the most recently added node (LIFO). ${newlyPushed.length > 0 ? `Its unvisited neighbours (${newlyPushed.join(", ")}) have been pushed onto the stack and will be explored next.` : "All of its neighbours have already been visited or are already on the stack."}`,
             operationCount,
         });
     }
