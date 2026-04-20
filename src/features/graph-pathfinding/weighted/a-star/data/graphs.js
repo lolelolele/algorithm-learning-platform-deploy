@@ -26,7 +26,7 @@ export const templates = [
     {
         id: "grid-sparse",
         category: "Grid",
-        name: "Sparse Grid",
+        name: "Grid 1",
         nodes: [
             { id: "A", x: 80,  y: 190 },
             { id: "B", x: 240, y: 80  },
@@ -58,7 +58,7 @@ export const templates = [
     {
         id: "grid-obstacles",
         category: "Grid",
-        name: "Grid with Detour",
+        name: "Grid 2",
         nodes: [
             { id: "A", x: 80,  y: 190 },
             { id: "B", x: 260, y: 80  },
@@ -85,7 +85,7 @@ export const templates = [
     {
         id: "misleading-1",
         category: "Heuristic Trap",
-        name: "Costly Direct Route",
+        name: "Heuristic 1",
         nodes: [
             { id: "A", x: 80,  y: 190 },
             { id: "B", x: 300, y: 190 },
@@ -110,7 +110,7 @@ export const templates = [
     {
         id: "misleading-2",
         category: "Heuristic Trap",
-        name: "Close but Expensive",
+        name: "Heuristic 2",
         nodes: [
             { id: "A", x: 80,  y: 190 },
             { id: "B", x: 260, y: 100 },
@@ -139,8 +139,8 @@ export const templates = [
     //Comparison layouts: shows difference between A* and Dijkstra
     {
         id: "compare-1",
-        category: "Uniform Weightsa",
-        name: "Heuristic Saves Steps",
+        category: "Uniform Weights",
+        name: "Uniform Weights 1",
         nodes: [
             { id: "A", x: 80,  y: 190 },
             { id: "B", x: 220, y: 80  },
@@ -174,7 +174,7 @@ export const templates = [
     {
         id: "compare-2",
         category: "Uniform Weights",
-        name: "Multiple Equal Paths",
+        name: "Uniform Weights 2",
         nodes: [
             { id: "A", x: 80,  y: 190 },
             { id: "B", x: 260, y: 80  },

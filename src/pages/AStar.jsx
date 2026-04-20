@@ -249,7 +249,7 @@ export default function AStar() {
 
                             <optgroup label="Uniform Weights">
                                 {templates
-                                    .filter(t => t.category === "A* vs Dijkstra")
+                                    .filter(t => t.category === "Uniform Weights")
                                     .map(t => (
                                         <option key={t.id} value={t.id}>
                                             {t.name}
