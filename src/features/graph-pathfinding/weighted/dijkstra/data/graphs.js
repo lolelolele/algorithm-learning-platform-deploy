@@ -209,7 +209,6 @@ export const templates = [
             { id: "D-F", from: "D", to: "F", weight: 4 },
             { id: "E-F", from: "E", to: "F", weight: 1 },
             { id: "B-E", from: "B", to: "E", weight: 6 },
-            { id: "C-D", from: "C", to: "D", weight: 5 },
             { id: "F-G", from: "F", to: "G", weight: 3 },
             { id: "F-H", from: "F", to: "H", weight: 4 },
             { id: "G-I", from: "G", to: "I", weight: 5 },
