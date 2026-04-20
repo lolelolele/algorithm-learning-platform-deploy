@@ -7,18 +7,19 @@ export default function QuickRenderer({ array, step }) {
         return <div className="text-sm text-gray-400">No array to display.</div>;
     }
 
-    const pivotIndex    = step?.pivotIndex   ?? null;
+    const pivotIndex = step?.pivotIndex   ?? null;
     const leftPartition = new Set(step?.leftPartition  ?? []);
-    const rightPartition= new Set(step?.rightPartition ?? []);
-    const activeRange   = step?.activeRange  ?? null;
-    const sorted        = step?.sortedIndices instanceof Set
+    const rightPartition = new Set(step?.rightPartition ?? []);
+    const activeRange = step?.activeRange  ?? null;
+    const sorted = step?.sortedIndices instanceof Set
         ? step.sortedIndices
         : new Set(step?.sortedIndices ?? []);
-    const swapped       = step?.swapped ?? null;
+    const swapped = step?.swapped ?? null;
+    const comparingIndex = step?.comparingIndex ?? null;
 
-    const BOX_W   = 48;
-    const BOX_H   = 48;
-    const GAP     = 8;
+    const BOX_W = 48;
+    const BOX_H = 48;
+    const GAP = 8;
     const ARROW_H = 36;
     const INDEX_H = 20;
     const n = array.length;
@@ -28,8 +29,9 @@ export default function QuickRenderer({ array, step }) {
 
     function boxColour(i) {
         if (sorted.has(i)) return { fill: "#bbf7d0", stroke: "#16a34a" }; // green
-        if (swapped && (swapped[0] === i || swapped[1] === i)) return { fill: "#fde68a", stroke: "#d97706" }; // amber
+        if (swapped && (swapped[0] === i || swapped[1] === i)) return { fill: "#fecaca", stroke: "#dc2626" }; // red
         if (i === pivotIndex) return { fill: "#e9d5ff", stroke: "#7c3aed" }; // purple
+        if (i === comparingIndex) return { fill: "#fef08a", stroke: "#ca8a04" }; // yellow
         if (leftPartition.has(i)) return { fill: "#bfdbfe", stroke: "#3b82f6" }; // blue
         if (rightPartition.has(i)) return { fill: "#fed7aa", stroke: "#f97316" }; // orange
 
@@ -171,7 +173,8 @@ export default function QuickRenderer({ array, step }) {
                 <LegendItem colour="#e9d5ff" border="#7c3aed" label="Pivot"         />
                 <LegendItem colour="#bfdbfe" border="#3b82f6" label="≤ pivot (left)" />
                 <LegendItem colour="#fed7aa" border="#f97316" label="> pivot (right)" />
-                <LegendItem colour="#fde68a" border="#d97706" label="Swapped"       />
+                <LegendItem colour="#fef08a" border="#ca8a04" label="Being compared" />
+                <LegendItem colour="#fecaca" border="#dc2626" label="Swapped"       />
                 <LegendItem colour="#bbf7d0" border="#16a34a" label="Sorted"        />
                 <LegendItem colour="#f1f5f9" border="#94a3b8" label="Unsorted"      />
             </div>
