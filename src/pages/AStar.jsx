@@ -398,29 +398,20 @@ export default function AStar() {
                             : "∅"}
                         </div>
                     </div>
-
-                    {currentStep?.explanationParts ?(
-                        <div className="space-y-2 leading-relaxed">
-                            <div>
-                                <span className="font-semibold">Rule: </span>
-                                <span>{currentStep.explanationParts.rule}</span>
-                            </div>
-
-                            <div>
-                                <span className="font-semibold">Reason: </span>
-                                <span>{currentStep.explanationParts.reason}</span>
-                            </div>
-
-                            <div>
-                                <span className="font-semibold">Effect: </span>
-                                <span>{currentStep.explanationParts.effect}</span>
-                            </div>
+                    <div className="space-y-2 leading-relaxed">
+                        <div>
+                            <span className="font-semibold">Rule: </span>
+                            <span>{currentStep?.explanationParts?.rule ?? "—"}</span>
                         </div>
-                    ) : (
-                        <p className="leading-relaxed">
-                            {currentStep?.explanation ?? "No explanation available for this step yet."}
-                        </p>
-                    )}
+                        <div>
+                            <span className="font-semibold">Reason: </span>
+                            <span>{currentStep?.explanationParts?.reason ?? "—"}</span>
+                        </div>
+                        <div>
+                            <span className="font-semibold">Effect: </span>
+                            <span>{currentStep?.explanationParts?.effect ?? "—"}</span>
+                        </div>
+                    </div>
                 </div>
             }
 
