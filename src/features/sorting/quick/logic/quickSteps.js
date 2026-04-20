@@ -85,6 +85,7 @@ export function generateQuickSteps(inputArray) {
                 activeRange: [low, high],
                 sortedIndices: new Set(sortedIndices),
                 swapped: null,
+                comparingIndex: j,
                 explanation: isSmaller
                     ? `${arr[j]} ≤ ${pivotValue} (pivot) —> this element belongs in the left group.`
                     : `${arr[j]} > ${pivotValue} (pivot) —> this element belongs in the right group.`,
