@@ -69,6 +69,8 @@ export function generateBFSSteps(graph, startId) {
         
         // record current BFS state for visualisation
         const isComplete = queue.length === 0;
+        const newlyEnqueued = neighbours.filter(n => !visited.has(n) && queue.includes(n));
+
         steps.push({
             visitedNodes: new Set(visited),
             currentNode: isComplete ? null : current,
@@ -76,11 +78,11 @@ export function generateBFSSteps(graph, startId) {
             visitedOrder: [...visitedOrder],
             highlightEdges: newHighlightEdges,
             explanation: isComplete
-                ? `Node ${current} visited. Queue is now empty — BFS complete. All reachable nodes have been visited.`
+                ? `Node ${current} visited. Queue is now empty, BFS complete. All reachable nodes have been visited.`
                 : `Visiting node ${current}. Exploring its neighbours. Queue: [${queue.join(", ")}]`,
             whyThisStep: isComplete
-                ? `BFS is complete. Every reachable node has been visited in level-order (breadth-first). The visited order was: ${visitedOrder.join(" → ")}.`
-                : `Node ${current} is dequeued because it was added to the queue first (FIFO). Its unvisited neighbours are now added to the back of the queue to be explored next.`,
+                ? `BFS is complete. Every reachable node has been visited in level-order (breadth-first). The full visited order was: ${visitedOrder.join(" → ")}.`
+                : `${current} was at the front of the queue. BFS always dequeues the node that has been waiting the longest (FIFO). ${newlyEnqueued.length > 0 ? `Its unvisited neighbours (${newlyEnqueued.join(", ")}) have been added to the back of the queue to be explored later.` : "All of its neighbours have already been visited or enqueued."}`,
             operationCount,
         });
     }
