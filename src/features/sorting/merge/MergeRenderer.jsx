@@ -6,11 +6,11 @@ const STATE_COLOURS = {
 };
 
 const LEVEL_HEIGHT = 100;  // vertical gap between tree levels
-const BOX_H        = 40;
-const CELL_W       = 32;   // width per element inside a node box
-const CELL_PAD     = 8;    // padding inside box
-const SVG_WIDTH    = 800;
-const MIN_SVG_H    = 400;
+const BOX_H = 40;
+const CELL_W = 32;   // width per element inside a node box
+const CELL_PAD = 8;    // padding inside box
+const SVG_WIDTH = 800;
+const MIN_SVG_H = 400;
 
 // converts a node's fractional position (0–1) to an x pixel coordinate
 function nodeX(position) {
@@ -87,9 +87,9 @@ export default function MergeRenderer({ step }) {
 
     function renderNodes() {
         return nodes.map(node => {
-            const x   = nodeX(node.position);
-            const y   = nodeY(node.level);
-            const bw  = boxWidth(node.array);
+            const x = nodeX(node.position);
+            const y = nodeY(node.level);
+            const bw = boxWidth(node.array);
             const colours = STATE_COLOURS[node.state] ?? STATE_COLOURS.idle;
             const isActive = node.id === activeNodeId;
 
@@ -170,10 +170,10 @@ export default function MergeRenderer({ step }) {
 
             {/* legend */}
             <div className="flex gap-4 text-xs text-gray-600">
-                <LegendItem colour="#fde68a" border="#d97706" label="Active"  />
+                <LegendItem colour="#fde68a" border="#d97706" label="Active" />
                 <LegendItem colour="#bfdbfe" border="#3b82f6" label="Merging" />
-                <LegendItem colour="#bbf7d0" border="#16a34a" label="Sorted"  />
-                <LegendItem colour="#f1f5f9" border="#94a3b8" label="Idle"    />
+                <LegendItem colour="#bbf7d0" border="#16a34a" label="Sorted" />
+                <LegendItem colour="#f1f5f9" border="#94a3b8" label="Idle" />
             </div>
         </div>
     );
