@@ -123,21 +123,25 @@ export function generateMergeSteps(inputArray) {
 
         while (i < sortedLeft.length && j < sortedRight.length) {
             comparisons++;
-            if (sortedLeft[i] <= sortedRight[j]) {
-                merged.push(sortedLeft[i++]);
-            } else {
-                merged.push(sortedRight[j++]);
-            }
+            const leftFront  = sortedLeft[i];
+            const rightFront = sortedRight[j];
+            const tookFromLeft = leftFront <= rightFront;
+            const placedVal = tookFromLeft ? sortedLeft[i++] : sortedRight[j++];
+            merged.push(placedVal);
             mergeWrites++;
-
+        
             steps.push({
                 nodes: snapshot(),
                 activeNodeId: nodeId,
-                explanation: `Comparing ${sortedLeft[i - 1] ?? sortedLeft[i]} and ${sortedRight[j - 1] ?? sortedRight[j]}: placing ${merged[merged.length - 1]} into merged array.`,
+                mergedSoFar: [...merged],
+                placedVal,
+                explanation: `Comparing ${leftFront} and ${rightFront}: placing ${placedVal} into merged array.`,
                 explanationParts: {
-                    rule: "Compare the front elements of both halves and take the smaller one.",
-                    reason: `${merged[merged.length - 1]} was the smaller of the two front elements.`,
-                    effect: `Merged so far: [${merged.join(", ")}].`,
+                    rule: "Compare the front elements of both halves and place the smaller one into the merged array.",
+                    reason: tookFromLeft
+                        ? `${leftFront} ≤ ${rightFront} so ${leftFront} is taken from the left half.`
+                        : `${rightFront} < ${leftFront} so ${rightFront} is taken from the right half.`,
+                    effect: `Merged so far: [${merged.join(", ")}]. ${merged.length} of ${sortedLeft.length + sortedRight.length} elements placed.`,
                 },
                 counters: { comparisons, mergeWrites },
                 phase: `Merging`,
